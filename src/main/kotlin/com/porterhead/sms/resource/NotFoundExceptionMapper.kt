@@ -9,7 +9,7 @@ import javax.ws.rs.ext.Provider
 class NotFoundExceptionMapper : ExceptionMapper<NotFoundException>{
 
     override fun toResponse(ex: NotFoundException?): Response {
-        val message: String = "Resource not found"
+        val message = "Resource not found"
         return Response.status(404).entity(message).build()
     }
 }

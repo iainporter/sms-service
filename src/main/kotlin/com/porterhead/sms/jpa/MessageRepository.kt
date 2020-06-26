@@ -6,6 +6,4 @@ import java.util.*
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
-class MessageRepository : PanacheRepositoryBase<SmsMessage, UUID> {
-
-}
+class MessageRepository : PanacheRepositoryBase<SmsMessage, UUID>

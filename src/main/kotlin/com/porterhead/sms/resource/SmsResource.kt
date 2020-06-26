@@ -37,6 +37,13 @@ class SmsResource {
         return Response.accepted().location(uriComponents.normalize()).build()
     }
 
+//    @GET
+//    fun queryForMessages(@QueryParam("status") status: Message.StatusEnum,
+//                        @QueryParam("toNumber") toNumber: String,
+//                        @QueryParam("page") page: Int,
+//                        @QueryParam("pageSize") pageSize: Int): Response {
+//    }
+
     @GET
     @Path("/{id}")
     fun getMessage(@PathParam("id") id: UUID): Response {

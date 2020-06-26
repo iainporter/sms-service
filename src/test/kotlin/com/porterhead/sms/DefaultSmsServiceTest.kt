@@ -1,21 +1,13 @@
 package com.porterhead.sms
 
-import ClickSend.Model.SmsMessage
 import com.porterhead.api.sms.SendSmsRequest
-import com.porterhead.sms.jpa.MessageRepository
 import io.quarkus.test.junit.QuarkusTest
-import io.quarkus.test.junit.mockito.InjectMock
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
 import javax.inject.Inject
 
 @QuarkusTest
 class DefaultSmsServiceTest {
-
-//    @InjectMock
-//    lateinit var messageRepository: MessageRepository
-
 
     @Inject
     lateinit var smsService: SmsService
@@ -26,8 +18,6 @@ class DefaultSmsServiceTest {
         val message = smsService.createMessage(request)
         val foundMessage = smsService.getMessage(message.id)
         Assertions.assertEquals(message, foundMessage)
-//        // Check that we called it 1 time
-//        Mockito.verify(messageRepository, Mockito.atLeastOnce()).persist(message)
     }
 
 
