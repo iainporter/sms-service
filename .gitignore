@@ -1,5 +1,6 @@
 /.env
-/sms.iml
-/config/application.properties.sample
+/config/*
 /target/
 /.idea/
+/sms-service.iml
+.DS*
