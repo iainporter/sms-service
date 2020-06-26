@@ -1,20 +1,19 @@
 package com.porterhead.sms
 
 import com.porterhead.api.sms.SendSmsRequest
-import com.porterhead.sms.domain.MessageStatus
 import com.porterhead.sms.domain.SmsMessage
-import java.time.Instant
+import com.porterhead.sms.jpa.MessageRepository
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
-import javax.persistence.EntityManager
 import javax.transaction.Transactional
+import javax.ws.rs.NotFoundException
 
 @ApplicationScoped
 class DefaultSmsService: SmsService {
 
     @Inject
-    lateinit var entityManager: EntityManager
+    lateinit var messageRepository: MessageRepository
 
     @Transactional
     override fun createMessage(request: SendSmsRequest): SmsMessage {
@@ -22,8 +21,15 @@ class DefaultSmsService: SmsService {
                 fromNumber = request.fromNumber,
                 toNumber = request.toNumber,
                 text = request.text)
-        entityManager.persist(entity)
+        messageRepository.persist(entity)
         return entity
     }
 
+    override fun getMessage(id: UUID): SmsMessage {
+        val message: Optional<SmsMessage> = messageRepository.findByIdOptional(id)
+        if (!message.isPresent) {
+            throw NotFoundException()
+        }
+        return message.get()
+    }
 }
