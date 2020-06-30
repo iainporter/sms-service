@@ -1,11 +1,13 @@
 package com.porterhead.sms.resource
 
+import com.porterhead.sms.toMessageResponse
 import com.porterhead.api.sms.Message
 import com.porterhead.api.sms.SendSmsRequest
 import com.porterhead.sms.SmsService
+import com.porterhead.sms.domain.MessageStatus
 import com.porterhead.sms.domain.SmsMessage
-import java.time.OffsetDateTime
-import java.time.ZoneId
+import io.quarkus.panache.common.Page
+import io.quarkus.panache.common.Sort
 import java.util.*
 import javax.enterprise.inject.Default
 import javax.inject.Inject
@@ -37,12 +39,16 @@ class SmsResource {
         return Response.accepted().location(uriComponents.normalize()).build()
     }
 
-//    @GET
-//    fun queryForMessages(@QueryParam("status") status: Message.StatusEnum,
-//                        @QueryParam("toNumber") toNumber: String,
-//                        @QueryParam("page") page: Int,
-//                        @QueryParam("pageSize") pageSize: Int): Response {
-//    }
+    @GET
+    fun queryForMessages(@QueryParam("status") status: Message.StatusEnum?,
+                        @QueryParam("toNumber") toNumber: String?,
+                        @QueryParam("page") page: Int?,
+                        @QueryParam("pageSize") pageSize: Int?,
+                        @QueryParam("sort") @DefaultValue ("updatedAt:desc") sort: String): Response {
+        val page: Page = Page.of(page?:0, pageSize?:25)
+        val results = smsService.getMessages(PageableQuery(page, QueryRequest.Builder().status(if (status != null) MessageStatus.valueOf(status.name) else null ).toNumber(toNumber).build()))
+        return Response.ok(results).build()
+    }
 
     @GET
     @Path("/{id}")
@@ -51,15 +57,4 @@ class SmsResource {
         return Response.ok(message.toMessageResponse()).build()
     }
 
-    private fun SmsMessage.toMessageResponse(): Message  {
-        val message: Message = Message()
-        message.id = id
-        message.fromNumber= fromNumber
-        message.toNumber = toNumber
-        message.text = text
-        message.status = Message.StatusEnum.fromValue(status.name)
-        message.createdAt = OffsetDateTime.ofInstant(createdAt, ZoneId.of("UTC"))
-        message.updatedAt = OffsetDateTime.ofInstant(updatedAt, ZoneId.of("UTC"))
-        return message
-    }
 }

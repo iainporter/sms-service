@@ -2,7 +2,9 @@ package com.porterhead.sms.domain
 
 import java.time.Instant
 import java.util.*
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.Id
 
 @Entity(name="sms.message")
 data class SmsMessage(
@@ -28,3 +30,4 @@ data class SmsMessage(
         @Column(nullable = false, name = "updated_at")
         var updatedAt: Instant = Instant.now()
 )
+

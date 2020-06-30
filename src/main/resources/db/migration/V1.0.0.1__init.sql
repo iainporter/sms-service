@@ -11,9 +11,9 @@ CREATE TABLE sms.message
     updated_at TIMESTAMP NOT NULL,
 )
 ;
-CREATE UNIQUE INDEX sms_to_number_idx on sms.message(to_number);
-CREATE UNIQUE INDEX sms_status_idx on sms.message(status);
-CREATE UNIQUE INDEX sms_created_at_idx on sms.message(created_at);
+CREATE INDEX sms_to_number_idx on sms.message(to_number);
+CREATE INDEX sms_status_idx on sms.message(status);
+CREATE INDEX sms_created_at_idx on sms.message(created_at);
 
 
 
