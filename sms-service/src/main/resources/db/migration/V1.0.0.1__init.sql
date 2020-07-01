@@ -8,7 +8,7 @@ CREATE TABLE sms.message
     text VARCHAR(1600) NOT NULL,
     status VARCHAR(32) NOT NULL,
     created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
 )
 ;
 CREATE INDEX sms_to_number_idx on sms.message(to_number);

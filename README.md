@@ -1,4 +1,24 @@
 ## SMS Service
 
-Pulls in sms-openapi module
-had to add META_INF/beans.xml to that project so that the beans would be loaded 
+*****WORK IN PROGRESS ****
+
+Micro Service for delivering SMS messages
+The sample providers are Twilio and Sendclick
+
+Make sure you build the dependent Open API module first (see https://github.com/iainporter/sms-openapi)
+
+Build the service
+
+`cd sms-service
+ mvn pakage
+ `
+ 
+To build the docker container
+
+`docker build -f Dockerfile.jvm -t porterhead/sms-service .`
+
+
+Then run docker-compose to bring the service up
+
+`docker-compose up`
+

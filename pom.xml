@@ -12,6 +12,7 @@
 
     <modules>
         <module>sms-service</module>
+        <module>component-test</module>
     </modules>
 
 </project>
