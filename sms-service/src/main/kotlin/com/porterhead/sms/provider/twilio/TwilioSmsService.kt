@@ -1,7 +1,5 @@
 package com.porterhead.sms.provider.twilio
 
-import com.porterhead.api.sms.SendSmsRequest
-import com.porterhead.sms.SmsService
 import com.porterhead.sms.domain.SmsMessage
 import com.porterhead.sms.provider.SmsProvider
 import com.twilio.exception.ApiException

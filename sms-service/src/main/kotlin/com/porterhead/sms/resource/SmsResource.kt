@@ -7,7 +7,6 @@ import com.porterhead.sms.SmsService
 import com.porterhead.sms.domain.MessageStatus
 import com.porterhead.sms.domain.SmsMessage
 import io.quarkus.panache.common.Page
-import io.quarkus.panache.common.Sort
 import java.util.*
 import javax.enterprise.inject.Default
 import javax.inject.Inject

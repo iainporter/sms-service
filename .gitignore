@@ -1,6 +1,11 @@
 /.env
 /config/*
-/target/
-/.idea/
-/sms-service.iml
+*/target/
+
+
+.idea
+*.iws
+*.iml
+*.ipr
 .DS*
+

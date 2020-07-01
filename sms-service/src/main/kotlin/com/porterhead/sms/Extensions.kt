@@ -2,7 +2,6 @@ package com.porterhead.sms
 
 import com.porterhead.api.sms.Message
 import com.porterhead.sms.domain.SmsMessage
-import io.quarkus.panache.common.Page
 import java.time.OffsetDateTime
 import java.time.ZoneId
 
