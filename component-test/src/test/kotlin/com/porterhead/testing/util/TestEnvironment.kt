@@ -22,6 +22,6 @@ abstract class TestEnvironment {
         @ClassRule
         @JvmField
         val env = KDockerComposeContainer(File("src/test/resources/docker-compose.yml"))
-                .waitingFor("sms-service", Wait.forHttp("/v1/sms"))
+                .waitingFor("sms-service", Wait.forHttp("/health"))
     }
 }

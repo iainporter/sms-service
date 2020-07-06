@@ -10,7 +10,7 @@ Make sure you build the dependent Open API module first (see https://github.com/
 Build the service
 
 `cd sms-service
- mvn pakage
+ mvn package
  `
  
 To build the docker container
