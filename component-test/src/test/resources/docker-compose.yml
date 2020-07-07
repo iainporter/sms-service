@@ -2,16 +2,12 @@ version: '3'
 services:
   postgres-db:
     image: postgres
-    ports:
-      - 5432:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=sms
   sms-service:
     image: porterhead/sms-service
-    ports:
-      - 8080:8080
     environment:
       WAIT_HOSTS: postgres-db:5432
       quarkus.datasource.username: postgres

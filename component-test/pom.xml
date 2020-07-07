@@ -85,7 +85,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>-Dfile.encoding=UTF-8</argLine>
-<!--                    <skipTests>true</skipTests>-->
+                    <!-- uncomment this if you want to run the tests in this module in a separate process-->
+                    <!-- <skipTests>true</skipTests>-->
                 </configuration>
             </plugin>
             <plugin>

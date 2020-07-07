@@ -5,7 +5,9 @@ import com.porterhead.sms.domain.SmsMessage
 import java.time.OffsetDateTime
 import java.time.ZoneId
 
-
+/**
+ * transform an SMSMessage to an API Message instance
+ */
 fun SmsMessage.toMessageResponse(): Message {
     val message: Message = Message()
     message.id = id

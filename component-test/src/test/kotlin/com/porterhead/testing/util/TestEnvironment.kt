@@ -7,21 +7,26 @@ import org.testcontainers.containers.DockerComposeContainer
 import org.testcontainers.containers.wait.strategy.Wait
 import java.io.File
 
-
 abstract class TestEnvironment {
 
     @Before
     fun setup() {
-        RestAssured.baseURI = "http://localhost:8080"
+        val port = env.getServicePort("sms-service_1", 8080)
+        RestAssured.baseURI = "http://localhost:$port"
     }
 
     companion object {
 
+        val env: KDockerComposeContainer by lazy {initDockerCompose()}
         class KDockerComposeContainer(path: File) : DockerComposeContainer<KDockerComposeContainer>(path)
 
-        @ClassRule
-        @JvmField
-        val env = KDockerComposeContainer(File("src/test/resources/docker-compose.yml"))
+        private fun initDockerCompose() = KDockerComposeContainer(File("src/test/resources/docker-compose.yml"))
+                .withExposedService("sms-service_1", 8080)
+                .withExposedService("postgres-db_1", 5432)
                 .waitingFor("sms-service", Wait.forHttp("/health"))
+
+        init {
+            env.start()
+        }
     }
 }
