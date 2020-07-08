@@ -1,0 +1,15 @@
+openapi: "3.0.2"
+info:
+    version: 1.0.0
+    title: SMS Service OpenAPI Specification
+    description: |
+        ## SMS Service API
+security:
+    - none:
+          type: http
+          scheme: not_required
+paths:
+    /v1/sms:
+        $ref: ./paths/v1/sms/messages.yaml
+    /v1/sms/{id}:
+        $ref: ./paths/v1/sms/{id}.yaml

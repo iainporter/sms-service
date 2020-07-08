@@ -1,0 +1,56 @@
+get:
+  summary: Paged List of Messages
+  tags:
+    - SMS
+  operationId: listMessages
+  description: Get a paginated response listing the Messages filtered by query params
+  parameters:
+    -   $ref: ../components/parameters/ToNumberParam.yaml
+    -   $ref: ../components/parameters/MessageStatusParam.yaml
+    -   $ref: ../components/parameters/PageParam.yaml
+    -   $ref: ../components/parameters/PageSizeParam.yaml
+    -   $ref: ../components/parameters/MessageSort.yaml
+
+  responses:
+    200:
+      description: Paginated list of Messages filtered by query parameters
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/v1/sms/PagedMessageResponse.yaml
+    400:
+      description: There is a problem with the request
+  x-code-samples:
+    -   lang: 'shell'
+        source: |
+          $ curl 'https://api.porterhead.com/v1/sms?pageSize=2&page=8&status=FAILED' -i -X GET \
+              -H 'Content-Type: application/json'
+post:
+  summary: Send an SMS message
+  operationId: sendSms
+  description: |
+    Send an SMS message
+    If the request is valid it will be accepted
+    and a Location header will be returned in the response
+  tags:
+    - SMS
+  x-code-samples:
+    -   lang: 'shell'
+        source: |
+          $ curl 'https://api.porterhead.com/v1/sms' -i -X POST \
+                -H 'Content-Type: application/json' \
+                -d '{"text":"Hello World", \
+                    "toNumber":"+44555225555", \
+                    "fromNumber": "+44123123123", \
+                }'
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/v1/sms/SendSmsRequest.yaml
+  responses:
+    202:
+      description: The request was accepted
+    400:
+      description: There is a problem with the request
+

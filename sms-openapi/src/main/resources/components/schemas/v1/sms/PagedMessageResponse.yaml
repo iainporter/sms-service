@@ -1,0 +1,37 @@
+type: object
+description: List Messages Response Object
+properties:
+  page:
+    type: object
+    properties:
+      numberOfElements:
+        type: integer
+        example: 25
+      totalElements:
+        type: integer
+        format: int64
+        example: 350
+      totalPages:
+        type: integer
+        example: 14
+      page:
+        type: integer
+        example: 1
+      pageSize:
+        type: integer
+        example: 25
+#  links: //TODO: figure out how to implement HATEOAS
+#    type: array
+#    items:
+#      type: object
+#      properties:
+#        rel:
+#          type: string
+#          example: first
+#        href:
+#          type: string
+#          example: https://api.porterhead.com/v1/sms/?status=FAILED&page=1&pageSize=25
+  content:
+    type: array
+    items:
+      $ref: Message.yaml

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf8" />
+  <title>{{title}}</title>
+  <!-- needed for adaptive design -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+    a, a:visited {
+    	color: #53b6e6 !important;
+        border-color: #53b6e6 !important;
+        border-radius: 3px;
+    }
+    .menu-content img {
+        width: 50%;
+        margin: 20px auto;
+    }
+    .menu-content .scrollbar-container {
+        padding-top: 14px;
+    }
+    .menu-content li label[role="menuitem"] span {
+        text-transform: none;
+        color: #53b6e6;
+        line-height: 1.3334;
+        font-family: Helvetica, sans-serif;
+    }
+    .api-info h1:first-child {
+        font-size: 42px !important;
+        color: #193c6e !important;
+        border-bottom: 1px solid #d8d8d8;
+    }
+    .api-content p, li {
+        font-size: 16px !important;
+        font-family: Helvetica !important;
+    }
+    .api-content p {
+        font-weight: 100 !important;
+    }
+    .api-content h1 {
+    	font-family: Georgia !important;
+    	font-size: 32px !important;
+    	line-height: 2.42;
+    	font-weight: 400 !important;
+      	color: #788695 !important;
+    }
+    .api-content h2 {
+        font-family: Georgia !important;
+    	color: #193c6e !important;
+    	font-size: 32px !important;
+    }
+    .redoc-markdown pre, .redoc-markdown pre[class*="language-"]{
+        white-space: pre-wrap !important;
+        line-height: 1.45 !important;
+        font-family: monospace !important;
+        background: #f2f3f5 !important;
+        border: none !important;
+        border-radius: 4px !important;
+        box-shadow: none !important;
+    }
+    .redoc-markdown pre code, .redoc-markdown pre code .token.string {
+        color: #000 !important;
+        line-height: 1.45;
+        border: none !important;
+        border-radius: 4px !important;
+        box-shadow: none !important;
+    }
+    @media (max-width: 50rem) {
+        .menu-content img {
+            display: none;
+        }
+    }
+  </style>
+  {{{redocHead}}}
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
+</head>
+
+<body>
+  {{{redocHTML}}}
+</body>
+
+</html>

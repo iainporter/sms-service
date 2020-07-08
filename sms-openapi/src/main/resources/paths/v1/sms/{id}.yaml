@@ -1,0 +1,24 @@
+get:
+  summary: Get an SMS Message that has been sent to the SMS Service
+  description: |
+    Get a Single Message by Id.
+  operationId: getSmsMessage
+
+  tags:
+    - SMS
+  parameters:
+    -   $ref: ../components/parameters/Id.yaml
+  x-code-samples:
+    -   lang: 'shell'
+        source: |
+          $ curl 'https://api.porterhead.com/v1/sms/1faa0da7-e973-4bb5-85c8-162c8d76fc55' -i -X GET \
+              -H 'Content-Type: application/json'
+  responses:
+    200:
+      description: Get Message Details
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/v1/sms/Message.yaml
+    404:
+      description: The message could not be found

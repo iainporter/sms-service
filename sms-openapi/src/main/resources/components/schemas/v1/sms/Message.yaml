@@ -1,0 +1,54 @@
+type: object
+required:
+  - id
+  - text
+  - fromNumber
+  - toNumber
+  - status
+  - createdAt
+  - updatedAt
+properties:
+  id:
+    description: Message identifier
+    type: string
+    format: uuid
+    example: 1faa0da7-e973-4bb5-85c8-162c8d76fc55
+    nullable: false
+  text:
+    type: string
+    description: The text for the SMS
+    minLength: 1
+    maxLength: 1600
+    example: Your code is 123456
+    nullable: false
+  toNumber:
+    type: string
+    pattern: ^\+[1-9]\d{1,14}$
+    description: The phone number to send the SMS message to
+    example: +44555225555
+    nullable: false
+  fromNumber:
+    type: string
+    pattern: ^\+[1-9]\d{1,14}$
+    description: The number the sms message cane from
+    example: +441112223344
+    nullable: false
+  status:
+    type: string
+    description: The status of the messasge
+    enum:
+      - WAITING
+      - DELIVERED
+      - FAILED
+  createdAt:
+    type: string
+    format: date-time
+    nullable: false
+    description: |
+      A timestamp indicating when the message was created
+  updatedAt:
+    type: string
+    format: date-time
+    nullable: false
+    description: |
+      A timestamp indicating when the message was updated

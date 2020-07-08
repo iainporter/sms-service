@@ -1,0 +1,10 @@
+  name: pageSize
+  in: query
+  description: The number of results to return in a page
+  required: false
+  schema:
+    type: integer
+    format: int32
+    default: 25
+    minimum: 1
+    maximum: 100

@@ -1,0 +1,10 @@
+name: sort
+in: query
+description: |
+  List of sort fields (e.g. ?sort=status:asc,createdAt:desc)
+  Default is createdAt:desc
+required: false
+schema:
+  type: string
+  pattern: '[a-zA-Z]+[:desc|:asc]'
+  default: 'createdAt:desc'

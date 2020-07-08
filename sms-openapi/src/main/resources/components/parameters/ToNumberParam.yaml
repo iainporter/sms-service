@@ -1,0 +1,7 @@
+name: type
+in: query
+description: The number the message was sent to.
+required: false
+type: string
+pattern: ^\+[1-9]\d{1,14}$
+example: +44555225555

@@ -1,0 +1,8 @@
+name: type
+in: query
+type: string
+description: The status of the messasge
+enum:
+  - WAITING
+  - DELIVERED
+  - FAILED

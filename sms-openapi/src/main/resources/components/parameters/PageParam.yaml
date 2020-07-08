@@ -1,0 +1,8 @@
+name: page
+in: query
+description: Page number. Default is 1.
+required: false
+schema:
+    type: integer
+    format: int32
+    default: 1

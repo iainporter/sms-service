@@ -2,7 +2,6 @@ package com.porterhead.testing.util
 
 import io.restassured.RestAssured
 import org.junit.Before
-import org.junit.ClassRule
 import org.testcontainers.containers.DockerComposeContainer
 import org.testcontainers.containers.wait.strategy.Wait
 import java.io.File

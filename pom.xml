@@ -11,6 +11,7 @@
     <name>sms-service-parent</name>
 
     <modules>
+        <module>sms-openapi</module>
         <module>sms-service</module>
         <module>component-test</module>
     </modules>

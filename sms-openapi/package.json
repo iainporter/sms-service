@@ -1,0 +1,17 @@
+{
+    "dependencies": {
+        "prismjs": "1.16.0",
+        "redoc": "^2.0.0-rc.16",
+        "redoc-cli": "^0.9.2",
+        "oas-validator": "^3.3.1"
+    },
+    "scripts": {
+        "validate": "NODE_NO_HTTP2=1 node validate.js"
+    },
+    "name": "oa3-api-spec",
+    "version": "1.0.0",
+    "main": "validate.js",
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+}
