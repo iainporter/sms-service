@@ -1,16 +1,22 @@
 package com.porterhead.sms
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.porterhead.api.sms.PagedMessageResponse
 import com.porterhead.api.sms.PagedMessageResponsePage
 import com.porterhead.api.sms.SendSmsRequest
 import com.porterhead.sms.domain.SmsMessage
+import com.porterhead.sms.event.SmsMessageCreatedEvent
 import com.porterhead.sms.jpa.MessageRepository
 import com.porterhead.sms.resource.PageableQuery
+import io.debezium.outbox.quarkus.ExportedEvent
 import io.quarkus.hibernate.orm.panache.PanacheQuery
 import io.quarkus.panache.common.Sort
+import mu.KotlinLogging
+import org.slf4j.Logger
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
+import javax.enterprise.event.Event
 import javax.transaction.Transactional
 import javax.ws.rs.NotFoundException
 
@@ -19,18 +25,25 @@ class DefaultSmsService: SmsService {
 
     companion object {
         val DEFAULT_SORT: Sort = Sort.by("updatedAt").descending()
+        private val log = KotlinLogging.logger{}
     }
 
     @Inject
     lateinit var messageRepository: MessageRepository
 
+    @Inject
+    lateinit var event : Event<ExportedEvent<String, JsonNode>>
+
     @Transactional
     override fun createMessage(request: SendSmsRequest): SmsMessage {
+        log.debug { "Persisting new SMS Message" }
         var entity = SmsMessage(
                 fromNumber = request.fromNumber,
                 toNumber = request.toNumber,
                 text = request.text)
         messageRepository.persist(entity)
+        log.debug { "Firing message created event" }
+        event.fire(SmsMessageCreatedEvent.fromSmsMessage(entity))
         return entity
     }
 

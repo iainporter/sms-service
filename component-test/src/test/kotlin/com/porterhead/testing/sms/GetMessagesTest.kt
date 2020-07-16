@@ -1,12 +1,12 @@
 package com.porterhead.testing.sms
 
 import com.porterhead.testing.RestFunctions
-import com.porterhead.testing.util.TestEnvironment
+import com.porterhead.testing.util.BaseComponentTst
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 import org.junit.Test
 
-class GetMessagesTest : TestEnvironment() {
+class GetMessagesTest : BaseComponentTst() {
 
     @Test
     fun `paging of messages`() {

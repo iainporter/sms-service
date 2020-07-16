@@ -2,9 +2,7 @@ package com.porterhead.sms.domain
 
 import java.time.Instant
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity(name="sms.message")
 data class SmsMessage(
@@ -21,6 +19,7 @@ data class SmsMessage(
         @Column(nullable = false)
         var text: String = "",
 
+        @Enumerated(EnumType.STRING)
         @Column(nullable = false)
         var status: MessageStatus = MessageStatus.WAITING,
 

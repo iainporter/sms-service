@@ -5,6 +5,9 @@ import javax.ws.rs.core.Response
 import javax.ws.rs.ext.ExceptionMapper
 import javax.ws.rs.ext.Provider
 
+/**
+ * TODO: provide a generic exception handling library that returns error messages in a format defined by the API
+ */
 @Provider
 class NotFoundExceptionMapper : ExceptionMapper<NotFoundException>{
 

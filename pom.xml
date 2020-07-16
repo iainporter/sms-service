@@ -5,14 +5,34 @@
 
     <groupId>com.porterhead</groupId>
     <artifactId>sms-service-parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
 
     <name>sms-service-parent</name>
 
+    <properties>
+        <compiler-plugin.version>3.8.1</compiler-plugin.version>
+        <maven.compiler.parameters>true</maven.compiler.parameters>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <quarkus-plugin.version>1.5.0.Final</quarkus-plugin.version>
+        <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
+        <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
+        <quarkus.platform.version>1.5.0.Final</quarkus.platform.version>
+        <version.debezium-quarkus>1.2.0.Final</version.debezium-quarkus>
+        <kotlin.version>1.3.72</kotlin.version>
+        <kotlin.logging.version>1.8.0.1</kotlin.logging.version>
+        <slf4j.version>1.7.30</slf4j.version>
+        <surefire-plugin.version>2.22.1</surefire-plugin.version>
+    </properties>
     <modules>
+        <!-- The API used by the service-->
         <module>sms-openapi</module>
+        <!-- The micro service-->
         <module>sms-service</module>
+        <!-- Use docker to test the service with all the dependencies-->
         <module>component-test</module>
     </modules>
 
