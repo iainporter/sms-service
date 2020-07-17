@@ -13,13 +13,12 @@
 
     <properties>
         <testcontainers.version>1.14.3</testcontainers.version>
-        <restassured.version>3.1.0</restassured.version>
-        <kotlin.version>1.3.72</kotlin.version>
-        <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
-        <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-        <quarkus.platform.version>1.5.0.Final</quarkus.platform.version>
-        <version.debezium-quarkus>1.2.0.Final</version.debezium-quarkus>
+        <test.containers.debezium.version>1.2.0.Final</test.containers.debezium.version>
+        <test.containers.kafka.version>1.8.2</test.containers.kafka.version>
+        <test.containers.postgres.version>1.14.3</test.containers.postgres.version>
+        <hamcrest.version>1.3</hamcrest.version>
     </properties>
+
     <dependencyManagement>
         <dependencies>
             <!-- The Quarkus BOM-->
@@ -42,6 +41,7 @@
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
             <version>${testcontainers.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
@@ -53,6 +53,7 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
             <version>${kotlin.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -69,36 +70,31 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
-            <version>1.3</version>
+            <version>${hamcrest.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
-            <version>1.7.25</version>
+            <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.debezium</groupId>
             <artifactId>debezium-testing-testcontainers</artifactId>
-            <version>1.2.0.Final</version>
+            <version>${test.containers.debezium.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>kafka</artifactId>
-            <version>1.8.2</version>
+            <version>${test.containers.kafka.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
-            <version>1.14.3</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>3.14.6</version>
+            <version>${test.containers.postgres.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

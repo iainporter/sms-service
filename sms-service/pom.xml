@@ -12,6 +12,12 @@
     <version>1.0.1</version>
   </parent>
 
+  <properties>
+    <gson.version>2.8.6</gson.version>
+    <mockito.kotlin.version>1.6.0</mockito.kotlin.version>
+    <mockk.version>1.9.3</mockk.version>
+  </properties>
+
   <dependencyManagement>
     <dependencies>
       <!-- The Quarkus BOM-->
@@ -63,6 +69,11 @@
       <artifactId>debezium-quarkus-outbox</artifactId>
       <version>${version.debezium-quarkus}</version>
     </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>${gson.version}</version>
+    </dependency>
 
     <!-- kotlin -->
     <dependency>
@@ -98,18 +109,7 @@
     </dependency>
     <!-- logging -->
 
-    <!-- SMS providers-->
-    <dependency>
-      <groupId>com.twilio.sdk</groupId>
-      <artifactId>twilio</artifactId>
-      <version>7.12.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.clicksend</groupId>
-      <artifactId>clicksend-java-client</artifactId>
-      <version>1.0.0</version>
-      <scope>compile</scope>
-    </dependency>
+
     <!-- OpenAPI-->
     <dependency>
       <groupId>com.porterhead.openapi</groupId>
@@ -141,7 +141,7 @@
     <dependency>
       <groupId>com.nhaarman</groupId>
       <artifactId>mockito-kotlin</artifactId>
-      <version>1.6.0</version>
+      <version>${mockito.kotlin.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -152,7 +152,7 @@
     <dependency>
       <groupId>io.mockk</groupId>
       <artifactId>mockk</artifactId>
-      <version>1.9.3</version>
+      <version>${mockk.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

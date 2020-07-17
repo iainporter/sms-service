@@ -26,6 +26,7 @@
         <kotlin.logging.version>1.8.0.1</kotlin.logging.version>
         <slf4j.version>1.7.30</slf4j.version>
         <surefire-plugin.version>2.22.1</surefire-plugin.version>
+        <restassured.version>3.1.0</restassured.version>
     </properties>
     <modules>
         <!-- The API used by the service-->
