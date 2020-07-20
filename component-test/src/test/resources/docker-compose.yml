@@ -1,7 +1,7 @@
 version: '3'
 services:
   postgres-db:
-    image: debezium/postgres:1.2
+    image: debezium/postgres
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -38,8 +38,6 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
   kafka-connect:
-    volumes:
-      - ./scripts:/scripts:rw
     image: debezium/connect:1.2
     ports:
       - 8083:8083
@@ -52,7 +50,3 @@ services:
       - CONFIG_STORAGE_TOPIC=my_connect_configs
       - OFFSET_STORAGE_TOPIC=my_connect_offsets
       - STATUS_STORAGE_TOPIC=my_connect_statuses
-    command:
-      - bash
-      - -c
-      - /scripts/create-connectors.sh

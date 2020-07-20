@@ -1,7 +1,7 @@
 version: '3'
 services:
   postgres-db:
-    image: debezium/postgres:1.2
+    image: debezium/postgres
     ports:
       - 5432:5432
     environment:
@@ -12,8 +12,10 @@ services:
     image: porterhead/sms-service
     ports:
       - 8080:8080
+      - 5005:5005
     environment:
       WAIT_HOSTS: postgres-db:5432
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
       quarkus.datasource.username: postgres
       quarkus.datasource.password: postgres
       quarkus.datasource.jdbc.url: jdbc:postgresql://postgres-db:5432/sms

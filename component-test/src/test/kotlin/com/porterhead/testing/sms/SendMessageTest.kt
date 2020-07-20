@@ -17,7 +17,7 @@ class SendMessageTest : BaseComponentTst() {
         val response = RestFunctions.sendSmsMessage(request)
         val location = response.header("Location")
         //check the message has been processed
-        Awaitility.await().atMost(5, TimeUnit.SECONDS).pollInterval(500, TimeUnit.MILLISECONDS).until {
+        Awaitility.await().atMost(20, TimeUnit.SECONDS).pollInterval(500, TimeUnit.MILLISECONDS).until {
             val messageResponse = RestFunctions.getMessage(location)
             val json : JsonPath = messageResponse.body.jsonPath()
             json.getString("status") == "DELIVERED"

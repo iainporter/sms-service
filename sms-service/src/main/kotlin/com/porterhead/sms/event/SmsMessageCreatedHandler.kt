@@ -1,7 +1,6 @@
 package com.porterhead.sms.event
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.porterhead.sms.domain.MessageStatus
@@ -20,7 +19,7 @@ import javax.transaction.Transactional
 class SmsMessageCreatedHandler {
 
     companion object {
-        private val mapper: ObjectMapper = ObjectMapper()
+        private val gson: Gson = GsonBuilder().create()
     }
 
     private val log = KotlinLogging.logger {}
@@ -39,7 +38,7 @@ class SmsMessageCreatedHandler {
             return
         }
         val eventPayload = deserialize(payload)
-        val messageId = UUID.fromString(eventPayload.get("id").asText())
+        val messageId = UUID.fromString(eventPayload.get("id").asString)
         val message = messageRepository.findById(messageId)
         message.status = MessageStatus.DELIVERED
         message.updatedAt = Instant.now()
@@ -49,20 +48,19 @@ class SmsMessageCreatedHandler {
 
     }
 
-    private fun deserialize(eventMessage: String): JsonNode {
+    private fun deserialize(eventMessage: String): JsonObject {
         log.debug { "attempting to deserialize message $eventMessage" }
         var payload = eventMessage //default
         try {
             if (eventMessage.contains("schema")) {
                 //extract the payload
-                val json: JsonObject = GsonBuilder()
-                        .create()
+                val json: JsonObject = gson
                         .fromJson(eventMessage, JsonObject::class.java)
                 payload = json.get("payload").asString
             }
             val unescaped = payload.replace("\\\"", "\"").trimIndent()
             val trimmed = unescaped.removeSurrounding("\"")
-            val json: JsonNode = mapper.readTree(trimmed)
+            val json = gson.fromJson(trimmed, JsonObject::class.java)
             log.debug { "payload has been parsed $json" }
             return json
 
