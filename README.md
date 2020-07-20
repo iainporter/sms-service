@@ -39,6 +39,12 @@ cd sms-service
 docker-compose up
 ```
 
+Install the Sms connector
+```
+curl 'localhost:8083/connectors/' -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" \
+-d '{"name": "sms-connector", "config": {"connector.class": "io.debezium.connector.postgresql.PostgresConnector", "database.hostname": "postgres-db", "database.port": "5432", "database.user": "postgres", "database.password": "postgres", "database.dbname" : "sms", "database.server.name": "smsdb1", "table.whitelist": "public.outboxevent", "transforms" : "outbox","transforms.outbox.type" : "io.debezium.transforms.outbox.EventRouter", "transforms.OutboxEventRouter.event.key": "aggregate_id", "transforms.outbox.table.fields.additional.placement": "type:header:eventType"}}'    
+```
+
 To send a message
 ```
 curl 'http://localhost:8080/v1/sms' -i -X POST  \
