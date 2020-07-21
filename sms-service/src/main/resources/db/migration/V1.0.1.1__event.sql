@@ -9,10 +9,10 @@ CREATE TABLE outboxevent
 )
 ;
 
-CREATE TABLE processedevent
+CREATE TABLE sms.processed_event
 (
-    eventid uuid PRIMARY KEY,
-    processedat TIMESTAMP NOT NULL
+    event_id uuid PRIMARY KEY,
+    processed_at TIMESTAMP NOT NULL
 )
 ;
 
