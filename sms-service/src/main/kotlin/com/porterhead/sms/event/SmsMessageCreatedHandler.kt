@@ -43,9 +43,7 @@ class SmsMessageCreatedHandler {
         message.status = MessageStatus.DELIVERED
         message.updatedAt = Instant.now()
         messageRepository.persist(message)
-        eventLog.processed(eventId)
         log.debug { "Message has been processed" }
-
     }
 
     private fun deserialize(eventMessage: String): JsonObject {

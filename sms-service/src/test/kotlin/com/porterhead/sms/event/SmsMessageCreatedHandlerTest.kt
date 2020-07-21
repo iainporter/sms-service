@@ -35,7 +35,6 @@ class SmsMessageCreatedHandlerTest {
     fun `Message created event is handled`() {
         val messageDouble = messageDouble()
         every { eventLog.alreadyProcessed(any()) } returns false
-        every { eventLog.processed(any()) } answers {Unit}
         val slot = slot<SmsMessage>()
         every { messageRepository.findById(any()) } returns messageDouble
         every { messageRepository.persist(capture(slot)) } answers {slot.captured}
@@ -47,7 +46,6 @@ class SmsMessageCreatedHandlerTest {
     fun `Message created event with schema wrapper is handled`() {
         val messageDouble = messageDouble()
         every { eventLog.alreadyProcessed(any()) } returns false
-        every { eventLog.processed(any()) } answers {Unit}
         val slot = slot<SmsMessage>()
         every { messageRepository.findById(any()) } returns messageDouble
         every { messageRepository.persist(capture(slot)) } answers {slot.captured}
