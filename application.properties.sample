@@ -1,0 +1,17 @@
+## Database properties
+quarkus.datasource.username = postgres
+quarkus.datasource.password = postgres
+quarkus.datasource.jdbc.url = jdbc:postgresql://localhost:5432/sms
+
+## Sign up for ClickSend (www.clicksend.com) and get username and apikey
+sms.provider.clicksend.enabled=true
+sms.provider.clicksend.username=
+sms.provider.clicksend.apiKey=
+sms.provider.clicksend.endpoint=https://rest.clicksend.com/v3/sms/send
+
+## Sign up for Twilio (www.twilio.com) and get the values to access the API
+sms.provider.twilio.enabled=true
+sms.provider.twilio.account.sid=
+sms.provider.twilio.endpoint=https://api.twilio.com/2010-04-01/Accounts/<your account.sid>/Messages.json
+sms.provider.twilio.auth.token=
+sms.provider.twilio.from.number=

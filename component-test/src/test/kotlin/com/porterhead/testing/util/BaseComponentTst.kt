@@ -40,6 +40,7 @@ abstract class BaseComponentTst {
                 .withEnv("quarkus.datasource.username", "postgres")
                 .withEnv("quarkus.datasource.password", "postgres")
                 .withEnv("quarkus.datasource.jdbc.url", "jdbc:postgresql://postgres-db:5432/sms")
+                .withClasspathResourceMapping("/config/application.properties", "/deployments/config/application.properties", BindMode.READ_WRITE)
                 .dependsOn(postgresContainer)
 
         var mockServerContainer = KGenericContainer("porterhead/wiremock")

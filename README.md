@@ -1,10 +1,7 @@
 ## SMS Service
 
-WORK IN PROGRESS
 
-Blog Posts to follow
-
-A production quality micro service that demonstrates the use of several technologies including:
+A production quality micro service for sending SMS messages that demonstrates the use of several technologies including:
 
 * Quarkus
 * GraalVM
@@ -14,18 +11,34 @@ A production quality micro service that demonstrates the use of several technolo
 * Messaging (Kafka)
 * Outbox pattern (Debezium, Kafka Connect)
 * Docker
+* OpenAPI
+* OIDC
 * Test Containers
 * Wiremock
 
+The service accepts SMS messages and routes them to configured providers
+The service has support for Twilio and ClickSend 
+New providers can easily be plugged in by implementing com.porterhead.sms.provider.SmsProvider
 
+You can build the service, but it won't accept messages unless there is at least one provider configured
+To configure the service, sign up to Twilio and/or ClickSend and add the appropriate properties
+to a config/application.properties file. See application.properties.sample 
+
+Ensure the config directory is mounted by checking the path in the docker-compose.yml file
+
+i.e.
+```
+    volumes:
+      - ../config/application.properties:/deployments/config/application.properties
+```
 
 Build the service
 
 ```
- mvn package
+ mvn install
  ```
  
-To build the docker container
+To build the docker container (not needed if you run mvn install)
 
 ```
 docker build -f sms-service/Dockerfile.jvm -t porterhead/sms-service .

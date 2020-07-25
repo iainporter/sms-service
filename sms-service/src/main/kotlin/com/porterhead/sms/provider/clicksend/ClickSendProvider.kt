@@ -48,7 +48,7 @@ class ClickSendProvider : SmsProvider {
     val gson = GsonBuilder().create()
 
     override fun sendSms(message: SmsMessage) {
-        log.debug("Sending SMS via Click Send Service to {}", message.toNumber)
+        log.debug("Sending SMS via ClickSend Service to {}", message.toNumber)
         val defaultClient = ApiClient()
         defaultClient.setUsername(username)
         defaultClient.setPassword(apiKey)
@@ -99,6 +99,7 @@ class ClickSendProvider : SmsProvider {
         val jsonObject = gson.fromJson(body.string(), JsonObject::class.java)
         val status = ((jsonObject.get("data") as JsonObject).getAsJsonArray("messages")[0] as JsonObject).getAsJsonPrimitive("status").asString
         if (status != "SUCCESS") {
+            log.debug { "Message was rejected with status $status" }
             throw ServerException("Message was rejected with status $status")
         }
     }
@@ -115,4 +116,10 @@ class ClickSendProvider : SmsProvider {
             }
         }
     }
+
+    override fun toString(): String {
+        return "ClickSendProvider(username=$username, endpoint=$endpoint)"
+    }
+
+
 }

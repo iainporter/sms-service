@@ -34,9 +34,7 @@ class TwilioProvider : SmsProvider {
     var fromNumber: String? = null
 
     override fun sendSms(message: SmsMessage) {
-        log.debug("Sending SMS Message {} to number {}", message.text, message.toNumber)
-
-
+        log.debug("Sending SMS via Twilio Service to {}", message.toNumber)
         val twilioRestClient = TwilioRestClient.Builder(accountSid, authToken).build()
         val twilioRequest = buildTwilioRequest(message)
 
@@ -44,6 +42,7 @@ class TwilioProvider : SmsProvider {
         response = try {
             twilioRestClient.request(twilioRequest)
         } catch (e: ApiException) {
+            log.debug("Send Message failed", e)
             throw ServerException(e.message!!)
         }
 
@@ -52,7 +51,9 @@ class TwilioProvider : SmsProvider {
             201 -> return
             400 -> throw BadRequestException("There was an error with the request")
             401 -> throw UnauthorizedException("Twilio credentials are invalid")
-            else -> throw ServerException("Non 2xx response returned from Twilio")
+            else -> {
+                log.debug { "Non 201 response returned from Twilio: ${response.statusCode}" }
+                throw ServerException("Non 201 response returned from Twilio")}
         }
     }
 
@@ -68,4 +69,10 @@ class TwilioProvider : SmsProvider {
         twilioRequest.addPostParam("Body", message.text)
         return twilioRequest
     }
+
+    override fun toString(): String {
+        return "TwilioProvider(accountSid=$accountSid, endpoint=$endpoint)"
+    }
+
+
 }

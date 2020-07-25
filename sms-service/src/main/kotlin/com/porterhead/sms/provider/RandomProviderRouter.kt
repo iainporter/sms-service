@@ -49,6 +49,7 @@ class RandomProviderRouter : ProviderRouter {
                 } while (nextIndex == index)
                 val provider = providers.toList()[nextIndex]
                 message.provider = provider.getName()
+                log.debug("retrying message with different provider {}", provider.getName())
                 provider.sendSms(message)
             } else {
                 throw e
@@ -65,5 +66,6 @@ class RandomProviderRouter : ProviderRouter {
             log.error { "******* Application is quitting as at least one SMS Provider must be configured ********" }
             exitProcess(1)
         }
+        providers.forEach { log.debug { "Provider: $it has been configured to send messages" } }
     }
 }

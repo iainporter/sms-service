@@ -19,6 +19,8 @@ services:
       quarkus.datasource.username: postgres
       quarkus.datasource.password: postgres
       quarkus.datasource.jdbc.url: jdbc:postgresql://postgres-db:5432/sms
+    volumes:
+      - ../config/application.properties:/deployments/config/application.properties
     depends_on:
       - postgres-db
   zookeeper:
