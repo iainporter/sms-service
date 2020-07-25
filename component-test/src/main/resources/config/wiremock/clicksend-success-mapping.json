@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPattern": "/clicksend-wiremock",
+    "bodyPatterns": [
+      { "matchesJsonPath" : "$..[?(@.to=='+1111111111' || @.to=='+2222222222')]$"}
+    ]
+  },
+  "response": {
+    "status": 200,
+    "body": "{\n\"http_code\": 200,\n \"response_code\": \"SUCCESS\",\n \"response_msg\": \"Here are your data.\",\n          \"data\": {\n            \"total_price\": 0.28,\n            \"total_count\": 2,\n            \"queued_count\": 2,\n            \"messages\": [\n              {\n                \"direction\": \"out\",\n                \"date\": 1436871253,\n                \"to\": \"+61411111111\",\n                \"body\": \"Jelly liquorice marshmallow candy carrot cake 4Eyffjs1vL.\",\n                \"from\": \"sendmobile\",\n                \"schedule\": 1436874701,\n                \"message_id\": \"BF7AD270-0DE2-418B-B606-71D527D9C1AE\",\n                \"message_parts\": 1,\n                \"message_price\": 0.07,\n                \"custom_string\": \"this is a test\",\n                \"user_id\": 1,\n                \"subaccount_id\": 1,\n                \"country\": \"AU\",\n                \"carrier\": \"Telstra\",\n                \"status\": \"SUCCESS\"\n              },\n              {\n                \"direction\": \"out\",\n                \"date\": 1436871253,\n                \"to\": \"+61411111111\",\n                \"body\": \"Chocolate bar icing icing oat cake carrot cake jelly cotton MWEvciEPIr.\",\n                \"from\": \"sendlist\",\n                \"schedule\": 1436876011,\n                \"message_id\": \"D0C273EE-816D-4DF2-8E9D-9D9C65F168F3\",\n                \"message_parts\": 1,\n                \"message_price\": 0.07,\n                \"custom_string\": \"this is a test\",\n                \"user_id\": 1,\n                \"subaccount_id\": 1,\n                \"country\": \"AU\",\n                \"carrier\": \"Telstra\",\n                \"status\": \"SUCCESS\"\n              }\n            ],\n            \"currency\": {\n              \"currency_name_short\": \"USD\",\n              \"currency_prefix_d\": \"${'$'}\",\n              \"currency_prefix_c\": \"¢\",\n              \"currency_name_long\": \"US Dollars\"\n            }\n          }\n        }"
+  }
+}

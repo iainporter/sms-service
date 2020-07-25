@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPattern": "/clicksend-wiremock",
+    "bodyPatterns": [
+      { "matchesJsonPath" : "$..[?(@.to=='+3333333333')]$"}
+    ]
+  },
+  "response": {
+    "status": 200,
+    "body": "{\n        \t\"http_code\": 200,\n        \t\"response_code\": \"SUCCESS\",\n        \t\"response_msg\": \"Messages queued for delivery.\",\n        \t\"data\": {\n        \t\t\"total_price\": 0,\n        \t\t\"total_count\": 1,\n        \t\t\"queued_count\": 0,\n        \t\t\"messages\": [{\n        \t\t\t\"to\": \"+44123123123\",\n        \t\t\t\"body\": \"Test Foo Bar\",\n        \t\t\t\"from\": \"\",\n        \t\t\t\"schedule\": \"\",\n        \t\t\t\"message_id\": \"7FCCC0C8-B327-4C4B-B9AD-9B330E75A50B\",\n        \t\t\t\"custom_string\": \"\",\n        \t\t\t\"status\": \"INVALID_RECIPIENT\"\n        \t\t}],\n        \t\t\"_currency\": {\n        \t\t\t\"currency_name_short\": \"AUD\",\n        \t\t\t\"currency_prefix_d\": \"${'$'}\",\n        \t\t\t\"currency_prefix_c\": \"c\",\n        \t\t\t\"currency_name_long\": \"Australian Dollars\"\n        \t\t}\n        \t}\n        }"
+  }
+}

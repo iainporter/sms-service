@@ -5,11 +5,9 @@ import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.awaitility.Awaitility
 import org.junit.BeforeClass
-import org.testcontainers.containers.GenericContainer
-import org.testcontainers.containers.KafkaContainer
-import org.testcontainers.containers.Network
-import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.containers.*
 import org.testcontainers.lifecycle.Startables
+import org.testcontainers.utility.MountableFile
 import java.util.concurrent.TimeUnit
 import java.util.stream.Stream
 
@@ -44,12 +42,17 @@ abstract class BaseComponentTst {
                 .withEnv("quarkus.datasource.jdbc.url", "jdbc:postgresql://postgres-db:5432/sms")
                 .dependsOn(postgresContainer)
 
+        var mockServerContainer = KGenericContainer("porterhead/wiremock")
+                .withNetwork(network)
+                .withNetworkAliases("wiremock")
+                .withExposedPorts(8080)
+                .withClasspathResourceMapping("/config/wiremock", "/var/wiremock/mappings", BindMode.READ_WRITE)
 
         @BeforeClass
         @JvmStatic
         fun startContainers() {
             Startables.deepStart(Stream.of(
-                    kafkaContainer, postgresContainer, debeziumContainer, smsServiceContainer))
+                    kafkaContainer, postgresContainer, debeziumContainer, smsServiceContainer, mockServerContainer))
                     .join()
             registerKafkaConnector(debeziumContainer.getMappedPort(8083))
             waitForConnector(debeziumContainer.getMappedPort(8083))
@@ -73,7 +76,6 @@ abstract class BaseComponentTst {
                         .extract()
                         .response()
                 response.statusCode == 200
-
             }
 
         }

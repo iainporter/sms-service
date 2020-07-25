@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPattern": "/twilio-wiremock",
+    "bodyPatterns": [
+      { "matches": "(.*&|^)To=+2222222222|($|&.*)"}
+    ]
+  },
+  "response": {
+    "status": 503,
+    "body": "{\n \"message\":\"The service is unavailable\",\n \"status\":503\n }"
+  }
+}

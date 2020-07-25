@@ -27,6 +27,9 @@ data class SmsMessage(
         var createdAt: Instant = Instant.now(),
 
         @Column(nullable = false, name = "updated_at")
-        var updatedAt: Instant = Instant.now()
+        var updatedAt: Instant = Instant.now(),
+
+        @Column(nullable = false)
+        var provider: String = ""
 )
 

@@ -84,6 +84,11 @@
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib-jdk8</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.github.rybalkinsd</groupId>
+      <artifactId>kohttp</artifactId>
+      <version>0.12.0</version>
+    </dependency>
     <!-- validation -->
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -107,7 +112,19 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-health</artifactId>
     </dependency>
-    <!-- logging -->
+
+    <!-- SMS providers-->
+    <dependency>
+      <groupId>com.twilio.sdk</groupId>
+      <artifactId>twilio</artifactId>
+      <version>7.12.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.clicksend</groupId>
+      <artifactId>clicksend-java-client</artifactId>
+      <version>1.0.0</version>
+      <scope>compile</scope>
+    </dependency>
 
 
     <!-- OpenAPI-->
@@ -153,6 +170,18 @@
       <groupId>io.mockk</groupId>
       <artifactId>mockk</artifactId>
       <version>${mockk.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock-jre8</artifactId>
+      <version>2.27.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.awaitility</groupId>
+      <artifactId>awaitility</artifactId>
+      <version>4.0.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -254,12 +283,13 @@
               <arguments>
                 <argument>rmi</argument>
                 <argument>porterhead/sms-service</argument>
+                <argument>porterhead/wiremock</argument>
               </arguments>
             </configuration>
           </execution>
           <!-- Create new docker image -->
           <execution>
-            <id>docker-build</id>
+            <id>docker-build-service</id>
             <phase>install</phase>
             <goals>
               <goal>exec</goal>
@@ -274,6 +304,25 @@
 <!--                <argument>Dockerfile.native</argument>-->
                 <argument>-t</argument>
                 <argument>porterhead/sms-service</argument>
+                <argument>.</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>docker-build-wiremock</id>
+            <phase>install</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>docker</executable>
+              <workingDirectory>${project.parent.basedir}/wiremock</workingDirectory>
+              <arguments>
+                <argument>build</argument>
+                <argument>-f</argument>
+                <argument>Dockerfile</argument>
+                <argument>-t</argument>
+                <argument>porterhead/wiremock</argument>
                 <argument>.</argument>
               </arguments>
             </configuration>

@@ -6,8 +6,6 @@ import com.porterhead.api.sms.Message
 import com.porterhead.api.sms.PagedMessageResponse
 import com.porterhead.api.sms.PagedMessageResponsePage
 import com.porterhead.sms.SmsService
-import io.quarkus.test.common.QuarkusTestResource
-import io.quarkus.test.h2.H2DatabaseTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.mockito.InjectMock
 import io.restassured.RestAssured
@@ -22,7 +20,6 @@ import java.util.*
 import javax.ws.rs.core.Response
 
 @QuarkusTest
-@QuarkusTestResource(value = H2DatabaseTestResource::class)
 class GetMessagesResourceTest {
 
     @InjectMock

@@ -12,11 +12,10 @@ import io.debezium.outbox.quarkus.ExportedEvent
 import io.quarkus.hibernate.orm.panache.PanacheQuery
 import io.quarkus.panache.common.Sort
 import mu.KotlinLogging
-import org.slf4j.Logger
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 import javax.enterprise.event.Event
+import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.ws.rs.NotFoundException
 
@@ -25,8 +24,8 @@ class DefaultSmsService: SmsService {
 
     companion object {
         val DEFAULT_SORT: Sort = Sort.by("updatedAt").descending()
-        private val log = KotlinLogging.logger{}
     }
+    private val log = KotlinLogging.logger{}
 
     @Inject
     lateinit var messageRepository: MessageRepository

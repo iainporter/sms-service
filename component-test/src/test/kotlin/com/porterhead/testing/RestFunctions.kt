@@ -5,6 +5,19 @@ import io.restassured.http.ContentType
 import io.restassured.response.Response
 
 object RestFunctions {
+
+    /** This number will be mapped to success for all providers*/
+    val successToNumberAll = "+1111111111"
+
+    /** This number will be mapped to success for clicksend but not Twilio*/
+    val successToNumberClicksend = "+2222222222"
+
+    /** This number will be mapped to success for twilio but not ClickSend*/
+    val successToNumberTwilio = "+3333333333"
+
+    /** This number will be mapped to failure for twilio and ClickSend*/
+    val failureToNumberAll = "+4444444444"
+
     fun sendSmsMessage(request: String, expectedStatus: Int = 202): Response {
         return RestAssured.given()
                 .contentType(ContentType.JSON)

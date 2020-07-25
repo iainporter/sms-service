@@ -3,6 +3,7 @@ package com.porterhead.sms.event
 import com.porterhead.sms.domain.MessageStatus
 import com.porterhead.sms.domain.SmsMessage
 import com.porterhead.sms.jpa.MessageRepository
+import com.porterhead.sms.provider.RandomProviderRouter
 import com.porterhead.sms.resource.GetSmsMessageResourceTest
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
@@ -20,6 +21,9 @@ class SmsMessageCreatedHandlerTest {
     @MockK
     val messageRepository = mockk<MessageRepository>()
 
+    @MockK
+    val router = mockk<RandomProviderRouter>()
+
     lateinit var handler: SmsMessageCreatedHandler
 
 
@@ -29,6 +33,7 @@ class SmsMessageCreatedHandlerTest {
         handler = SmsMessageCreatedHandler()
         handler.eventLog = eventLog
         handler.messageRepository = messageRepository
+        handler.router = router
     }
 
     @Test
@@ -38,6 +43,7 @@ class SmsMessageCreatedHandlerTest {
         val slot = slot<SmsMessage>()
         every { messageRepository.findById(any()) } returns messageDouble
         every { messageRepository.persist(capture(slot)) } answers {slot.captured}
+        every { router.routeMessage(any()) } returns messageDouble.apply { messageDouble.status = MessageStatus.DELIVERED }
         handler.onEvent(UUID.randomUUID(), "sms_message_created", "sms_message", eventPayload(messageDouble), Instant.now())
         assertEquals(MessageStatus.DELIVERED, slot.captured.status)
     }
@@ -49,6 +55,7 @@ class SmsMessageCreatedHandlerTest {
         val slot = slot<SmsMessage>()
         every { messageRepository.findById(any()) } returns messageDouble
         every { messageRepository.persist(capture(slot)) } answers {slot.captured}
+        every { router.routeMessage(any()) } returns messageDouble.apply { messageDouble.status = MessageStatus.DELIVERED }
         val message = """
             {"schema":{"type":"string","optional":false},"payload":"{\"id\":\"b06c8f8e-70ff-42b2-b544-ebc6dfb3eed4\",\"fromNumber\":\"+1234567890\",\"toNumber\":\"+1234567891\",\"text\":\"Foo Bar!\",\"status\":\"WAITING\"}"}            """
         handler.onEvent(UUID.randomUUID(), "sms_message_created", "sms_message", message, Instant.now())

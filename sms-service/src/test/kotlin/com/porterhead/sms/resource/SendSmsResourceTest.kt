@@ -4,8 +4,6 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import com.porterhead.sms.SmsService
 import com.porterhead.sms.domain.SmsMessage
-import io.quarkus.test.common.QuarkusTestResource
-import io.quarkus.test.h2.H2DatabaseTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.mockito.InjectMock
 import io.restassured.RestAssured.given
@@ -16,7 +14,6 @@ import org.junit.jupiter.api.Test
 import javax.ws.rs.core.Response
 
 @QuarkusTest
-@QuarkusTestResource(value = H2DatabaseTestResource::class)
 class SendSmsResourceTest {
 
     @InjectMock

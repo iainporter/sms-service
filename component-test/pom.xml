@@ -10,6 +10,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sms-service-spec</artifactId>
+    <packaging>jar</packaging>
 
     <properties>
         <testcontainers.version>1.14.3</testcontainers.version>
@@ -95,6 +96,12 @@
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
             <version>${test.containers.postgres.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>mockserver</artifactId>
+            <version>1.14.3</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -3,8 +3,8 @@ package com.porterhead.sms.event
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
-import com.porterhead.sms.domain.MessageStatus
 import com.porterhead.sms.jpa.MessageRepository
+import com.porterhead.sms.provider.ProviderRouter
 import mu.KotlinLogging
 import java.time.Instant
 import java.util.*
@@ -30,6 +30,9 @@ class SmsMessageCreatedHandler {
     @Inject
     lateinit var messageRepository: MessageRepository
 
+    @Inject
+    lateinit var router: ProviderRouter
+
     @Transactional
     fun onEvent(eventId: UUID, eventType: String, key: String, payload: String, ts: Instant) {
         log.debug { "Event handler for Created messages invoked" }
@@ -39,9 +42,8 @@ class SmsMessageCreatedHandler {
         }
         val eventPayload = deserialize(payload)
         val messageId = UUID.fromString(eventPayload.get("id").asString)
-        val message = messageRepository.findById(messageId)
-        message.status = MessageStatus.DELIVERED
-        message.updatedAt = Instant.now()
+        var message = messageRepository.findById(messageId)
+        message = router.routeMessage(message)
         messageRepository.persist(message)
         log.debug { "Message has been processed" }
     }
