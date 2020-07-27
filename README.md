@@ -1,5 +1,8 @@
 ## SMS Service
 
+See accompanying blog posts
+
+* [Part One] (https://medium.com/@changeant/building-a-microservice-from-the-ground-up-with-quarkus-kotlin-and-debezium-83ae5c8a8bbc)
 
 A production quality micro service for sending SMS messages that demonstrates the use of several technologies including:
 

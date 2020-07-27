@@ -4,7 +4,10 @@ import com.porterhead.sms.domain.SmsMessage
 
 interface SmsProvider {
 
-    fun sendSms(message: SmsMessage)
+    /**
+     * Send an SMS message to a provider
+     */
+    fun sendSms(message: SmsMessage): ProviderResponse
 
     fun getName(): String
 }

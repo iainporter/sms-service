@@ -1,10 +1,8 @@
 package com.porterhead.sms.provider.twilio
 
 import com.porterhead.sms.domain.SmsMessage
-import com.porterhead.sms.provider.BadRequestException
-import com.porterhead.sms.provider.ServerException
+import com.porterhead.sms.provider.ProviderResponse
 import com.porterhead.sms.provider.SmsProvider
-import com.porterhead.sms.provider.UnauthorizedException
 import com.twilio.exception.ApiException
 import com.twilio.http.HttpMethod
 import com.twilio.http.Request
@@ -33,7 +31,7 @@ class TwilioProvider : SmsProvider {
     @ConfigProperty(name = "sms.provider.twilio.from.number")
     var fromNumber: String? = null
 
-    override fun sendSms(message: SmsMessage) {
+    override fun sendSms(message: SmsMessage) : ProviderResponse {
         log.debug("Sending SMS via Twilio Service to {}", message.toNumber)
         val twilioRestClient = TwilioRestClient.Builder(accountSid, authToken).build()
         val twilioRequest = buildTwilioRequest(message)
@@ -43,17 +41,17 @@ class TwilioProvider : SmsProvider {
             twilioRestClient.request(twilioRequest)
         } catch (e: ApiException) {
             log.debug("Send Message failed", e)
-            throw ServerException(e.message!!)
+            return ProviderResponse.FAILED(e.localizedMessage)
         }
 
         log.debug("API response from Twilio, statusCode: {}", response.statusCode)
         when (response.statusCode) {
-            201 -> return
-            400 -> throw BadRequestException("There was an error with the request")
-            401 -> throw UnauthorizedException("Twilio credentials are invalid")
+            201 -> return ProviderResponse.SUCCESS
+            400 -> return ProviderResponse.FAILED("There was an error with the request")
+            401 -> return ProviderResponse.FAILED("Credentials are invalid")
             else -> {
                 log.debug { "Non 201 response returned from Twilio: ${response.statusCode}" }
-                throw ServerException("Non 201 response returned from Twilio")}
+                throw return ProviderResponse.FAILED("Non 201 response returned ${response.statusCode}")}
         }
     }
 

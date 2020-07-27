@@ -3,9 +3,7 @@ package com.porterhead.sms.event
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
-import com.porterhead.sms.domain.MessageStatus
 import com.porterhead.sms.jpa.MessageRepository
-import com.porterhead.sms.provider.ProviderException
 import com.porterhead.sms.provider.ProviderRouter
 import mu.KotlinLogging
 import java.time.Instant
@@ -45,12 +43,7 @@ class SmsMessageCreatedHandler {
         val eventPayload = deserialize(payload)
         val messageId = UUID.fromString(eventPayload.get("id").asString)
         var message = messageRepository.findById(messageId)
-        try {
-            message = router.routeMessage(message)
-        } catch (e: ProviderException) {
-            log.debug ("Message will be marked as FAILED", e)
-            message.status = MessageStatus.FAILED
-        }
+        message = router.routeMessage(message)
         message.updatedAt = Instant.now()
         messageRepository.persist(message)
         log.debug { "Message has been processed" }

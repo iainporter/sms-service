@@ -4,9 +4,7 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.porterhead.sms.domain.SmsMessage
-import com.porterhead.sms.provider.BadRequestException
-import com.porterhead.sms.provider.ServerException
-import com.porterhead.sms.provider.UnauthorizedException
+import com.porterhead.sms.provider.ProviderResponse
 import com.porterhead.sms.resource.GetSmsMessageResourceTest
 import com.twilio.http.TwilioRestClient
 import org.apache.commons.lang3.RandomStringUtils
@@ -44,7 +42,8 @@ class TwilioProviderTest {
                         .withStatus(TwilioRestClient.HTTP_STATUS_CODE_CREATED)
                         .withHeader("Content-Type", "application/json")
                         .withBody(TwilioData().validResponse)))
-        twilioProvider.sendSms(messageDouble())
+        val status = twilioProvider.sendSms(messageDouble())
+        Assertions.assertTrue(status == ProviderResponse.SUCCESS)
         wireMockServer.verify(1, postRequestedFor(urlEqualTo("/twilio-mock")))
     }
 
@@ -55,8 +54,8 @@ class TwilioProviderTest {
                         .withStatus(401)
                         .withHeader("Content-Type", "application/json")
                         .withBody(TwilioData().unauthorizedResponse)))
-        Assertions.assertThrows(UnauthorizedException::class.java) { twilioProvider.sendSms(messageDouble()) }
-    }
+        val status = twilioProvider.sendSms(messageDouble())
+        Assertions.assertTrue(status is ProviderResponse.FAILED && status.failureMessage == "Credentials are invalid")    }
 
     @Test
     fun `Send an Sms Message and expect 400`() {
@@ -65,7 +64,8 @@ class TwilioProviderTest {
                         .withStatus(400)
                         .withHeader("Content-Type", "application/json")
                         .withBody(TwilioData().badData)))
-        Assertions.assertThrows(BadRequestException::class.java) { twilioProvider.sendSms(messageDouble()) }
+        val status = twilioProvider.sendSms(messageDouble())
+        Assertions.assertTrue(status is ProviderResponse.FAILED && status.failureMessage == "There was an error with the request")
     }
 
     @Test
@@ -75,7 +75,8 @@ class TwilioProviderTest {
                         .withStatus(500)
                         .withHeader("Content-Type", "application/json")
                         .withBody(TwilioData().serviceUnavailable)))
-        Assertions.assertThrows(ServerException::class.java) { twilioProvider.sendSms(messageDouble()) }
+        val status = twilioProvider.sendSms(messageDouble())
+        Assertions.assertTrue(status is ProviderResponse.FAILED && status.failureMessage == "Non 201 response returned 500")
     }
 
     private fun messageDouble(): SmsMessage {

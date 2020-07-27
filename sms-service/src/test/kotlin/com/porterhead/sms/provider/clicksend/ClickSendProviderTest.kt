@@ -4,12 +4,12 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.porterhead.sms.domain.SmsMessage
-import com.porterhead.sms.provider.ServerException
-import com.porterhead.sms.provider.UnauthorizedException
+import com.porterhead.sms.provider.ProviderResponse
 import com.porterhead.sms.provider.twilio.TwilioData
 import com.porterhead.sms.resource.GetSmsMessageResourceTest
 import org.apache.commons.lang3.RandomStringUtils
 import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions.assertTrue
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ClickSendProviderTest {
@@ -43,7 +43,8 @@ class ClickSendProviderTest {
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody(ClickSendData().validResponse)))
-        provider.sendSms(messageDouble())
+        val status = provider.sendSms(messageDouble())
+        assertTrue(status == ProviderResponse.SUCCESS)
         wireMockServer.verify(1, WireMock.postRequestedFor(WireMock.urlEqualTo("/clicksend-mock")))
     }
 
@@ -54,7 +55,8 @@ class ClickSendProviderTest {
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody(ClickSendData().invalidRecipient)))
-        Assertions.assertThrows(ServerException::class.java) { provider.sendSms(messageDouble()) }
+        val status = provider.sendSms(messageDouble())
+        assertTrue(status is ProviderResponse.FAILED && status.failureMessage == "INVALID_RECIPIENT")
     }
 
     @Test
@@ -64,7 +66,20 @@ class ClickSendProviderTest {
                         .withStatus(401)
                         .withHeader("Content-Type", "application/json")
                         .withBody(TwilioData().unauthorizedResponse)))
-        Assertions.assertThrows(UnauthorizedException::class.java) { provider.sendSms(messageDouble()) }
+        val status = provider.sendSms(messageDouble())
+        assertTrue(status is ProviderResponse.FAILED && status.failureMessage == "Unauthorized")
+    }
+
+    @Test
+    fun `Send an Sms Message and get socket timeout`() {
+        wireMockServer.stubFor(WireMock.post(WireMock.urlPathMatching("/clicksend-mock"))
+                .willReturn(WireMock.aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(ClickSendData().validResponse)
+                        .withFixedDelay(6000))) //1 sec longer than the configured read timeout
+        val status = provider.sendSms(messageDouble())
+        assertTrue(status is ProviderResponse.FAILED)
     }
 
     private fun messageDouble(): SmsMessage {

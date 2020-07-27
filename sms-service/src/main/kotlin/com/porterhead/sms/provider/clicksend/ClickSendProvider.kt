@@ -1,15 +1,12 @@
 package com.porterhead.sms.provider.clicksend
 
-import ClickSend.ApiClient
-import ClickSend.ApiException
 import ClickSend.Model.SmsMessageCollection
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.porterhead.sms.domain.SmsMessage
-import com.porterhead.sms.provider.BadRequestException
-import com.porterhead.sms.provider.ServerException
-import com.porterhead.sms.provider.SmsProvider
-import com.porterhead.sms.provider.UnauthorizedException
+import com.porterhead.sms.provider.*
+import io.github.rybalkinsd.kohttp.client.defaultHttpClient
+import io.github.rybalkinsd.kohttp.client.fork
 import io.github.rybalkinsd.kohttp.dsl.httpPost
 import io.github.rybalkinsd.kohttp.ext.url
 import io.quarkus.arc.properties.IfBuildProperty
@@ -17,6 +14,7 @@ import mu.KotlinLogging
 import okhttp3.Response
 import okhttp3.ResponseBody
 import org.eclipse.microprofile.config.inject.ConfigProperty
+import java.net.SocketTimeoutException
 import java.net.URL
 import java.util.*
 import javax.annotation.PostConstruct
@@ -40,6 +38,12 @@ class ClickSendProvider : SmsProvider {
 
     var apiCreds: String? = null
 
+    val client = defaultHttpClient.fork {
+        connectTimeout = 5000
+        writeTimeout = 5000
+        readTimeout = 5000
+    }
+
     @PostConstruct
     fun init() {
         apiCreds = Base64.getEncoder().encodeToString("$username:$apiKey".toByteArray())
@@ -47,40 +51,35 @@ class ClickSendProvider : SmsProvider {
 
     val gson = GsonBuilder().create()
 
-    override fun sendSms(message: SmsMessage) {
+    override fun sendSms(message: SmsMessage) : ProviderResponse {
         log.debug("Sending SMS via ClickSend Service to {}", message.toNumber)
-        val defaultClient = ApiClient()
-        defaultClient.setUsername(username)
-        defaultClient.setPassword(apiKey)
-        val smsMessage = ClickSend.Model.SmsMessage()
-        smsMessage.body(message.text)
-        smsMessage.to(message.toNumber)
-        smsMessage.source(message.fromNumber)
-
-        val smsMessageList: List<ClickSend.Model.SmsMessage> = mutableListOf(smsMessage)
-        val smsMessages = SmsMessageCollection()
-        smsMessages.messages(smsMessageList)
+        val smsMessages = buildRequest(message)
         val response =
                 try {
                     postToApi(smsMessages)
-                } catch (e: ApiException) {
+                } catch (e: SocketTimeoutException) {
                     log.debug { "Post to ClickSend API failed $e" }
-                    throw ServerException(e.message!!)
+                    return ProviderResponse.FAILED(e.localizedMessage)
                 }
         log.debug("API response from ClickSend, statusCode: {}", response.code())
         when (response.code()) {
             200 -> {
+                val status: String = response.body()?.let { extractStatus(it) }?: "Unknown Status"
                 //failed requests will be successful with a status code in the message indicating the failure
-                response.body()?.let { extractStatus(it) }
+                return if (status == "SUCCESS") {
+                    ProviderResponse.SUCCESS
+                } else {
+                    ProviderResponse.FAILED(status)
+                }
             }
             400 -> {
                 log.debug { "got 400 response back from ClickSend ${gson.fromJson(response.body()?.string(), JsonObject::class.java)}" }
-                throw BadRequestException("There was an error with the request")
+                return ProviderResponse.FAILED("The request is invalid")
             }
-            401 -> throw UnauthorizedException("ClickSend credentials are invalid")
+            401 -> return ProviderResponse.FAILED("Unauthorized")
             else -> {
-                log.debug { "got non-200 response back from ClickSend ${response.body().toString()}" }
-                throw ServerException("Non 2xx response returned from ClickSend")
+                log.debug { "got non-200 response back from ClickSend ${response.code()}" }
+                return ProviderResponse.FAILED("Response status : ${response.code()}")
             }
         }
     }
@@ -90,24 +89,34 @@ class ClickSendProvider : SmsProvider {
         return "ClickSend"
     }
 
+    private fun buildRequest(message: SmsMessage): SmsMessageCollection {
+        val smsMessage = ClickSend.Model.SmsMessage()
+        smsMessage.body(message.text)
+        smsMessage.to(message.toNumber)
+        smsMessage.source(message.fromNumber)
+
+        val smsMessageList: List<ClickSend.Model.SmsMessage> = mutableListOf(smsMessage)
+        val smsMessages = SmsMessageCollection()
+        smsMessages.messages(smsMessageList)
+        return smsMessages
+    }
+
     /**
      * Extract the status from the response body
      * Assume only one message was sent
      * The path in the response body is data.messages[0].status
      */
-    private fun extractStatus(body: ResponseBody) {
+    private fun extractStatus(body: ResponseBody): String {
         val jsonObject = gson.fromJson(body.string(), JsonObject::class.java)
-        val status = ((jsonObject.get("data") as JsonObject).getAsJsonArray("messages")[0] as JsonObject).getAsJsonPrimitive("status").asString
-        if (status != "SUCCESS") {
-            log.debug { "Message was rejected with status $status" }
-            throw ServerException("Message was rejected with status $status")
-        }
+        return ((jsonObject.get("data") as JsonObject)
+                .getAsJsonArray("messages")[0] as JsonObject)
+                .getAsJsonPrimitive("status").asString
     }
 
     private fun postToApi(smsMessages: SmsMessageCollection): Response {
         val bodyAsJson = gson.toJson(smsMessages)
         log.debug { "serialised messages to json: $bodyAsJson" }
-        return httpPost {
+        return httpPost(client) {
             url(URL(endpoint))
             header { "Authorization" to "Basic $apiCreds" }
             header { "Content-Type" to "application/json" }
@@ -120,6 +129,5 @@ class ClickSendProvider : SmsProvider {
     override fun toString(): String {
         return "ClickSendProvider(username=$username, endpoint=$endpoint)"
     }
-
 
 }

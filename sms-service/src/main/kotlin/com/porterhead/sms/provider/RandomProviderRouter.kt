@@ -13,7 +13,7 @@ import kotlin.system.exitProcess
 @ApplicationScoped
 class RandomProviderRouter : ProviderRouter {
 
-    private val log = KotlinLogging.logger{}
+    private val log = KotlinLogging.logger {}
 
     @Inject
     lateinit var providers: Instance<SmsProvider>
@@ -21,10 +21,10 @@ class RandomProviderRouter : ProviderRouter {
     var random: Random = Random()
 
     override fun routeMessage(message: SmsMessage): SmsMessage {
-        try {
-            routeMessageInternal(message)
+        val status = routeMessageInternal(message)
+        if (status is ProviderResponse.SUCCESS) {
             message.status = MessageStatus.DELIVERED
-        } catch (e: ProviderException) {
+        } else {
             message.status = MessageStatus.FAILED
         }
         return message
@@ -32,28 +32,25 @@ class RandomProviderRouter : ProviderRouter {
 
     /**
      * Route the message to a random Provider from the list of Providers
-     * If there is a server exception then pick another unused provider to try the message again
+     * If there is a server failure then pick another unused provider to try the message again
      */
-    private fun routeMessageInternal(message: SmsMessage) {
+    private fun routeMessageInternal(message: SmsMessage): ProviderResponse {
         val index = random.nextInt(providers.count())
-        try {
-            val provider = providers.toList()[index]
+        val provider = providers.toList()[index]
+        message.provider = provider.getName()
+        val status = provider.sendSms(message)
+        //only retry when there is a failed message
+        if (status is ProviderResponse.FAILED && providers.count() > 1) {
+            var nextIndex: Int
+            do {
+                nextIndex = random.nextInt(providers.count())
+            } while (nextIndex == index)
+            val provider = providers.toList()[nextIndex]
             message.provider = provider.getName()
-            provider.sendSms(message)
-        } catch (e: ServerException) {
-            //only retry when there is a server exception
-            if (providers.count() > 1) {
-                var nextIndex: Int
-                do {
-                    nextIndex = random.nextInt(providers.count())
-                } while (nextIndex == index)
-                val provider = providers.toList()[nextIndex]
-                message.provider = provider.getName()
-                log.debug("retrying message with different provider {}", provider.getName())
-                provider.sendSms(message)
-            } else {
-                throw e
-            }
+            log.debug("retrying message with different provider {}", provider.getName())
+            return provider.sendSms(message)
+        } else {
+            return status
         }
     }
 
