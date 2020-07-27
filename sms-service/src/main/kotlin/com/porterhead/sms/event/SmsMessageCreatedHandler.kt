@@ -51,6 +51,7 @@ class SmsMessageCreatedHandler {
             log.debug ("Message will be marked as FAILED", e)
             message.status = MessageStatus.FAILED
         }
+        message.updatedAt = Instant.now()
         messageRepository.persist(message)
         log.debug { "Message has been processed" }
     }
