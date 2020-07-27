@@ -40,12 +40,17 @@ class SmsResource {
 
     @GET
     fun queryForMessages(@QueryParam("status") status: Message.StatusEnum?,
-                        @QueryParam("toNumber") toNumber: String?,
-                        @QueryParam("page") page: Int?,
-                        @QueryParam("pageSize") pageSize: Int?,
-                        @QueryParam("sort") @DefaultValue ("updatedAt:desc") sort: String): Response {
-        val page: Page = Page.of(page?:0, pageSize?:25)
-        val results = smsService.getMessages(PageableQuery(page, QueryRequest.Builder().status(if (status != null) MessageStatus.valueOf(status.name) else null ).toNumber(toNumber).build()))
+                         @QueryParam("toNumber") toNumber: String?,
+                         @QueryParam("page") page: Int?,
+                         @QueryParam("pageSize") pageSize: Int?,
+                         @QueryParam("sort") @DefaultValue("updatedAt:desc") sort: String): Response {
+        val page: Page = Page.of(page ?: 0, pageSize ?: 25)
+        val status = (if (status != null) MessageStatus.valueOf(status.name) else null)
+        val results = smsService.getMessages(PageableQuery(page, QueryRequest
+                .Builder()
+                .status(status)
+                .toNumber(toNumber)
+                .build()))
         return Response.ok(results).build()
     }
 
