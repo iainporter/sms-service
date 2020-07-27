@@ -7,7 +7,7 @@ properties:
         type: string
         description: The text for the SMS
         minLength: 1
-        maxLength: 1600
+        maxLength: 160
         example: Your code is 123456
         nullable: false
     toNumber:
