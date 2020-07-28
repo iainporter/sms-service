@@ -1,7 +1,6 @@
 package com.porterhead.testing.sms
 
 import com.porterhead.testing.RestFunctions
-import com.porterhead.testing.util.BaseComponentTst
 import io.restassured.path.json.JsonPath
 import org.awaitility.Awaitility
 import org.junit.Test
