@@ -6,7 +6,7 @@ import org.testcontainers.containers.DockerComposeContainer
 import org.testcontainers.containers.wait.strategy.Wait
 import java.io.File
 
-abstract class TestEnvironment {
+open class TestEnvironment {
 
     @Before
     fun setup() {
