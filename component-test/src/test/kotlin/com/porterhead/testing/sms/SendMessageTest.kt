@@ -1,20 +1,12 @@
 package com.porterhead.testing.sms
 
 import com.porterhead.testing.RestFunctions
-import com.porterhead.testing.util.TestEnvironment
-import io.restassured.RestAssured
-import io.restassured.http.ContentType
-import io.restassured.response.Response
-import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.instanceOf
 import org.junit.Test
 import java.util.*
-import kotlin.test.assertEquals
 
-class SendMessageTest : TestEnvironment() {
+class SendMessageTest : BaseTst() {
 
     @Test
     fun `a valid request to send a SMS Message`() {

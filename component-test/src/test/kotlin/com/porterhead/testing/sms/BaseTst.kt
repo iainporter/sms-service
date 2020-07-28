@@ -1,4 +1,4 @@
-package com.porterhead.testing.util
+package com.porterhead.testing.sms
 
 import io.restassured.RestAssured
 import org.junit.Before
@@ -6,7 +6,7 @@ import org.testcontainers.containers.DockerComposeContainer
 import org.testcontainers.containers.wait.strategy.Wait
 import java.io.File
 
-open class TestEnvironment {
+open class BaseTst {
 
     @Before
     fun setup() {
@@ -16,7 +16,7 @@ open class TestEnvironment {
 
     companion object {
 
-        val env: KDockerComposeContainer by lazy {initDockerCompose()}
+        val env: KDockerComposeContainer by lazy { initDockerCompose() }
         class KDockerComposeContainer(path: File) : DockerComposeContainer<KDockerComposeContainer>(path)
 
         private fun initDockerCompose() = KDockerComposeContainer(File("src/test/resources/docker-compose.yml"))
