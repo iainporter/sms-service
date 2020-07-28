@@ -5,13 +5,33 @@ import org.junit.Test
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
+import org.openapitools.jackson.nullable.JsonNullable
 import javax.validation.ConstraintViolation
 import javax.validation.Validation
 import kotlin.test.assertEquals
+import kotlin.test.asserter
 
 class SendSmsRequestTest {
 
     val mapper = ObjectMapper().registerModule(KotlinModule())
+
+    @Test
+    fun serailizeFromInstance() {
+        assertEquals("{\"text\":null,\"toNumber\":null,\"fromNumber\":null}", mapper.writeValueAsString(SendSmsRequest()))
+        assertEquals("{\"text\":null,\"toNumber\":null,\"fromNumber\":\"+1234567890\"}", mapper.writeValueAsString(SendSmsRequest().fromNumber("+1234567890")))
+        assertEquals("{\"text\":null,\"toNumber\":\"+1234567890\",\"fromNumber\":null}", mapper.writeValueAsString(SendSmsRequest().toNumber("+1234567890")))
+        assertEquals("{\"text\":\"Foo Bar\",\"toNumber\":null,\"fromNumber\":null}", mapper.writeValueAsString(SendSmsRequest().text("Foo Bar")))
+    }
+
+    @Test
+    fun deserializeToInstance() {
+        assertEquals(null, mapper.readValue("{\"text\":null,\"toNumber\":null,\"fromNumber\":null}", SendSmsRequest::class.java).fromNumber)
+        assertEquals(null, mapper.readValue("{\"text\":null,\"toNumber\":null,\"fromNumber\":null}", SendSmsRequest::class.java).toNumber)
+        assertEquals(null, mapper.readValue("{\"text\":null,\"toNumber\":null,\"fromNumber\":null}", SendSmsRequest::class.java).text)
+        assertEquals("+1234567890", mapper.readValue("{\"text\":null,\"toNumber\":null,\"fromNumber\":\"+1234567890\"}", SendSmsRequest::class.java).fromNumber)
+        assertEquals("+1234567890", mapper.readValue("{\"text\":null,\"toNumber\":\"+1234567890\",\"fromNumber\":null}", SendSmsRequest::class.java).toNumber)
+        assertEquals("Foo Bar", mapper.readValue("{\"text\":\"Foo Bar\",\"toNumber\":null,\"fromNumber\":null}", SendSmsRequest::class.java).text)
+    }
 
     @Test
     fun `all properties are valid`() {
