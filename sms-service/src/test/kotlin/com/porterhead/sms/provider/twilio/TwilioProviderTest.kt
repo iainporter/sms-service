@@ -43,7 +43,7 @@ class TwilioProviderTest {
                         .withHeader("Content-Type", "application/json")
                         .withBody(TwilioData().validResponse)))
         val status = twilioProvider.sendSms(messageDouble())
-        Assertions.assertTrue(status == ProviderResponse.SUCCESS)
+        Assertions.assertTrue(status == ProviderResponse.SUCCESS(twilioProvider.getName()))
         wireMockServer.verify(1, postRequestedFor(urlEqualTo("/twilio-mock")))
     }
 

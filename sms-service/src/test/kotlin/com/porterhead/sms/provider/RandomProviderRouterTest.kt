@@ -46,34 +46,33 @@ class RandomProviderRouterTest {
     @Test
     fun `message is routed to random provider`() {
         setWiremocks_Success()
-        val message = providerRouter.routeMessage(messageDouble())
-        assert(message.status == DELIVERED)
+        val response = providerRouter.routeMessage(messageDouble())
+        assert(response is ProviderResponse.SUCCESS)
     }
 
     @Test
     fun `message is routed to Twilio provider if ClickSend generates server exception`() {
         setTwilioWiremock(201, TwilioData().validResponse)
         setClickSendWiremock(200, ClickSendData().invalidRecipient)
-        val message = providerRouter.routeMessage(messageDouble())
-        assert(message.status == DELIVERED)
-        assert(message.provider == TwilioProvider().getName())
+        val response = providerRouter.routeMessage(messageDouble())
+        assert(response is ProviderResponse.SUCCESS && response.providerName == TwilioProvider().getName())
     }
 
     @Test
     fun `message is routed to ClickSend provider if Twilio generates server exception`() {
         setTwilioWiremock(500, TwilioData().serviceUnavailable)
         setClickSendWiremock(200, ClickSendData().validResponse)
-        val message = providerRouter.routeMessage(messageDouble())
-        assert(message.status == DELIVERED)
-        assert(message.provider == ClickSendProvider().getName())
+        val response = providerRouter.routeMessage(messageDouble())
+        assert(response is ProviderResponse.SUCCESS && response.providerName == ClickSendProvider().getName())
+
     }
 
     @Test
     fun `message fails when ClickSend and Twilio generate server exception`() {
         setTwilioWiremock(500, TwilioData().serviceUnavailable)
         setClickSendWiremock(200, ClickSendData().invalidRecipient)
-        val message = providerRouter.routeMessage(messageDouble())
-        assert(message.status == FAILED)
+        val response = providerRouter.routeMessage(messageDouble())
+        assert(response is ProviderResponse.FAILED)
     }
 
 

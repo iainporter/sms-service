@@ -44,7 +44,7 @@ class ClickSendProviderTest {
                         .withHeader("Content-Type", "application/json")
                         .withBody(ClickSendData().validResponse)))
         val status = provider.sendSms(messageDouble())
-        assertTrue(status == ProviderResponse.SUCCESS)
+        assertTrue(status == ProviderResponse.SUCCESS(provider.getName()))
         wireMockServer.verify(1, WireMock.postRequestedFor(WireMock.urlEqualTo("/clicksend-mock")))
     }
 

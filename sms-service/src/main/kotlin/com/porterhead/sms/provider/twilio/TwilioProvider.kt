@@ -41,17 +41,17 @@ class TwilioProvider : SmsProvider {
             twilioRestClient.request(twilioRequest)
         } catch (e: ApiException) {
             log.debug("Send Message failed", e)
-            return ProviderResponse.FAILED(e.localizedMessage)
+            return ProviderResponse.FAILED(getName(), e.localizedMessage)
         }
 
         log.debug("API response from Twilio, statusCode: {}", response.statusCode)
         when (response.statusCode) {
-            201 -> return ProviderResponse.SUCCESS
-            400 -> return ProviderResponse.FAILED("There was an error with the request")
-            401 -> return ProviderResponse.FAILED("Credentials are invalid")
+            201 -> return ProviderResponse.SUCCESS(getName())
+            400 -> return ProviderResponse.FAILED(getName(), "There was an error with the request")
+            401 -> return ProviderResponse.FAILED(getName(), "Credentials are invalid")
             else -> {
                 log.debug { "Non 201 response returned from Twilio: ${response.statusCode}" }
-                throw return ProviderResponse.FAILED("Non 201 response returned ${response.statusCode}")}
+                throw return ProviderResponse.FAILED(getName(), "Non 201 response returned ${response.statusCode}")}
         }
     }
 

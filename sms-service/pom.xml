@@ -4,12 +4,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.porterhead</groupId>
   <artifactId>sms-service</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.2</version>
 
   <parent>
     <groupId>com.porterhead</groupId>
     <artifactId>sms-service-parent</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
   </parent>
 
   <properties>

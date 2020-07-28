@@ -1,6 +1,5 @@
 package com.porterhead.sms.provider
 
-import com.porterhead.sms.domain.MessageStatus
 import com.porterhead.sms.domain.SmsMessage
 import mu.KotlinLogging
 import java.util.*
@@ -20,14 +19,8 @@ class RandomProviderRouter : ProviderRouter {
 
     var random: Random = Random()
 
-    override fun routeMessage(message: SmsMessage): SmsMessage {
-        val status = routeMessageInternal(message)
-        if (status is ProviderResponse.SUCCESS) {
-            message.status = MessageStatus.DELIVERED
-        } else {
-            message.status = MessageStatus.FAILED
-        }
-        return message
+    override fun routeMessage(message: SmsMessage): ProviderResponse {
+        return routeMessageInternal(message)
     }
 
     /**

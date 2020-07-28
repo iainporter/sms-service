@@ -3,7 +3,9 @@ package com.porterhead.sms.event
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
+import com.porterhead.sms.domain.MessageStatus
 import com.porterhead.sms.jpa.MessageRepository
+import com.porterhead.sms.provider.ProviderResponse
 import com.porterhead.sms.provider.ProviderRouter
 import mu.KotlinLogging
 import java.time.Instant
@@ -43,7 +45,14 @@ class SmsMessageCreatedHandler {
         val eventPayload = deserialize(payload)
         val messageId = UUID.fromString(eventPayload.get("id").asString)
         var message = messageRepository.findById(messageId)
-        message = router.routeMessage(message)
+        val response = router.routeMessage(message)
+        if (response is ProviderResponse.SUCCESS) {
+            message.status = MessageStatus.DELIVERED
+            message.provider = response.providerName
+        } else if(response is ProviderResponse.FAILED){
+            message.status = MessageStatus.FAILED
+            message.provider = response.providerName
+        }
         message.updatedAt = Instant.now()
         messageRepository.persist(message)
         log.debug { "Message has been processed" }

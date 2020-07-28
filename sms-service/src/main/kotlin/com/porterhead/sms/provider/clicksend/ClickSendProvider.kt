@@ -59,7 +59,7 @@ class ClickSendProvider : SmsProvider {
                     postToApi(smsMessages)
                 } catch (e: SocketTimeoutException) {
                     log.debug { "Post to ClickSend API failed $e" }
-                    return ProviderResponse.FAILED(e.localizedMessage)
+                    return ProviderResponse.FAILED(getName(), e.localizedMessage)
                 }
         log.debug("API response from ClickSend, statusCode: {}", response.code())
         when (response.code()) {
@@ -67,19 +67,19 @@ class ClickSendProvider : SmsProvider {
                 val status: String = response.body()?.let { extractStatus(it) }?: "Unknown Status"
                 //failed requests will be successful with a status code in the message indicating the failure
                 return if (status == "SUCCESS") {
-                    ProviderResponse.SUCCESS
+                    ProviderResponse.SUCCESS(getName())
                 } else {
-                    ProviderResponse.FAILED(status)
+                    ProviderResponse.FAILED(getName(), status)
                 }
             }
             400 -> {
                 log.debug { "got 400 response back from ClickSend ${gson.fromJson(response.body()?.string(), JsonObject::class.java)}" }
-                return ProviderResponse.FAILED("The request is invalid")
+                return ProviderResponse.FAILED(getName(),"The request is invalid")
             }
-            401 -> return ProviderResponse.FAILED("Unauthorized")
+            401 -> return ProviderResponse.FAILED(getName(),"Unauthorized")
             else -> {
                 log.debug { "got non-200 response back from ClickSend ${response.code()}" }
-                return ProviderResponse.FAILED("Response status : ${response.code()}")
+                return ProviderResponse.FAILED(getName(),"Response status : ${response.code()}")
             }
         }
     }
