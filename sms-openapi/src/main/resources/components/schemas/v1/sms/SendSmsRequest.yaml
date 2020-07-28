@@ -9,17 +9,13 @@ properties:
         minLength: 1
         maxLength: 160
         example: Your code is 123456
-        nullable: false
     toNumber:
         type: string
         pattern: ^\+[1-9]\d{1,14}$
         description: The phone number to send the SMS message to
         example: +44555225555
-        nullable: false
     fromNumber:
         type: string
         pattern: ^\+[1-9]\d{1,14}$
-        description: The number the sms message cane from
+        description: The number the sms message came from
         example: +441112223344
-        nullable: true
-
