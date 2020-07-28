@@ -1,4 +1,4 @@
-package com.porterhead.testing.util
+package com.porterhead.testing.sms
 
 import io.debezium.testing.testcontainers.DebeziumContainer
 import io.restassured.RestAssured

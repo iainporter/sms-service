@@ -7,7 +7,6 @@ import com.porterhead.testing.RestFunctions.sendSmsMessage
 import com.porterhead.testing.RestFunctions.successToNumberAll
 import com.porterhead.testing.RestFunctions.successToNumberClicksend
 import com.porterhead.testing.RestFunctions.successToNumberTwilio
-import com.porterhead.testing.util.BaseComponentTst
 import io.restassured.path.json.JsonPath
 import org.awaitility.Awaitility
 import org.junit.Test
