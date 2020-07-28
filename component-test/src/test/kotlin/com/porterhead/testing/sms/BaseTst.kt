@@ -1,18 +1,11 @@
 package com.porterhead.testing.sms
 
 import io.restassured.RestAssured
-import org.junit.Before
 import org.testcontainers.containers.DockerComposeContainer
 import org.testcontainers.containers.wait.strategy.Wait
 import java.io.File
 
 open class BaseTst {
-
-    @Before
-    fun setup() {
-        val port = env.getServicePort("sms-service_1", 8080)
-        RestAssured.baseURI = "http://localhost:$port"
-    }
 
     companion object {
 
@@ -26,6 +19,8 @@ open class BaseTst {
 
         init {
             env.start()
+            val port = env.getServicePort("sms-service_1", 8080)
+            RestAssured.baseURI = "http://localhost:$port"
         }
     }
 }

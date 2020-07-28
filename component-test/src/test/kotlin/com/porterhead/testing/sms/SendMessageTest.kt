@@ -3,7 +3,7 @@ package com.porterhead.testing.sms
 import com.porterhead.testing.RestFunctions
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.util.*
 
 class SendMessageTest : BaseTst() {
