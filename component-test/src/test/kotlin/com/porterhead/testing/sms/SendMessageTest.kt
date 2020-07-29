@@ -18,28 +18,24 @@ class SendMessageTest : BaseComponentTst() {
 
     @Test
     fun `a valid request to send a SMS Message`() {
-        //send a message
         val request = """{"text":"Foo Bar", "fromNumber":"+1234567890", "toNumber":"$successToNumberAll"}"""
         sendMessageAndAssertStatus(request, "DELIVERED")
     }
 
     @Test
     fun `Message is still sent when twilio returns a server exception`() {
-        //send a message
         val request = """{"text":"Foo Bar", "fromNumber":"+1234567890", "toNumber":"$successToNumberClicksend"}"""
         sendMessageAndAssertStatus(request, "DELIVERED")
     }
 
     @Test
     fun `Message is still sent when clicksend returns a server exception`() {
-        //send a message
         val request = """{"text":"Foo Bar", "fromNumber":"+1234567890", "toNumber":"$successToNumberTwilio"}"""
         sendMessageAndAssertStatus(request, "DELIVERED")
     }
 
     @Test
     fun `Message is failed when clicksend and twilio returns a server exception`() {
-        //send a message
         val request = """{"text":"Foo Bar", "fromNumber":"+1234567890", "toNumber":"$failureToNumberAll"}"""
         sendMessageAndAssertStatus(request, "FAILED")
     }

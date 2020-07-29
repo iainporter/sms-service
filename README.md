@@ -2,20 +2,22 @@
 
 See accompanying blog posts
 
-* [Part One - Building-a-microservice-from-the-ground-up-with-quarkus-kotlin-and-debezium]( https://medium.com/@changeant/building-a-microservice-from-the-ground-up-with-quarkus-kotlin-and-debezium-83ae5c8a8bbc)
+* [Part One - Building a microservice from the ground up with quarkus kotlin and debezium]( https://medium.com/@changeant/building-a-microservice-from-the-ground-up-with-quarkus-kotlin-and-debezium-83ae5c8a8bbc)
+* [Part Two - Implementing the transactional outbox pattern with debezium in quarkus](https://medium.com/@changeant/implementing-the-transactional-outbox-pattern-with-debezium-in-quarkus-f2680306951)
 
 A production quality micro service for sending SMS messages that demonstrates the use of several technologies including:
 
 * Quarkus
 * GraalVM
 * Kotlin
-* Persistence (Postgres)
-* JPA (Panache)
-* Messaging (Kafka)
-* Outbox pattern (Debezium, Kafka Connect)
+* Postgres (Persistence)
+* Panache (JPA)
+* Flyway (Database migration)
+* Kafka (Messaging)
+* Debezium, Kafka Connect (Transactional Outbox pattern)
+* Okta (OIDC)
+* Open API
 * Docker
-* OpenAPI
-* OIDC
 * Test Containers
 * Wiremock
 
