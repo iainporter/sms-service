@@ -69,6 +69,7 @@ class ClickSendProvider : SmsProvider {
                 return if (status == "SUCCESS") {
                     ProviderResponse.SUCCESS(getName())
                 } else {
+                    log.debug { "ClickSend failed to send the message due to: $status" }
                     ProviderResponse.FAILED(getName(), status)
                 }
             }
