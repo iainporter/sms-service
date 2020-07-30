@@ -5,7 +5,7 @@
 
     <groupId>com.porterhead</groupId>
     <artifactId>sms-service-parent</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <packaging>pom</packaging>
 
     <name>sms-service-parent</name>
