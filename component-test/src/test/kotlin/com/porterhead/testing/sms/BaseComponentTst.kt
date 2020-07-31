@@ -52,6 +52,9 @@ abstract class BaseComponentTst {
         @BeforeClass
         @JvmStatic
         fun startContainers() {
+            kafkaContainer.start()
+            val kafkaBootstrap: String = kafkaContainer.bootstrapServers
+            System.setProperty("kafka.bootstrap.servers", kafkaBootstrap)
             Startables.deepStart(Stream.of(
                     kafkaContainer, postgresContainer, debeziumContainer, smsServiceContainer, mockServerContainer))
                     .join()
