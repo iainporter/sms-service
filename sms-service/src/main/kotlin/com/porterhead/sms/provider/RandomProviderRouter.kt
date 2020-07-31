@@ -10,8 +10,7 @@ import javax.inject.Inject
 import kotlin.system.exitProcess
 
 @ApplicationScoped
-class RandomProviderRouter(@Inject
-                           var providers: Instance<SmsProvider>) : ProviderRouter {
+class RandomProviderRouter(val providers: Instance<SmsProvider>) : ProviderRouter {
 
     private val log = KotlinLogging.logger {}
 
