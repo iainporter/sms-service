@@ -5,22 +5,19 @@ import mu.KotlinLogging
 import java.util.*
 import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
+import javax.enterprise.inject.Any
 import javax.enterprise.inject.Instance
 import javax.inject.Inject
 import kotlin.system.exitProcess
 
 @ApplicationScoped
-class RandomProviderRouter(val providers: Instance<SmsProvider>) : ProviderRouter {
+class RandomProviderRouter : ProviderRouter {
 
     private val log = KotlinLogging.logger {}
 
-    init {
-        if (providers.count() == 0) {
-            log.error { "******* Application is quitting as at least one SMS Provider must be configured ********" }
-            exitProcess(1)
-        }
-        providers.forEach { log.debug { "Provider: $it has been configured to send messages" } }
-    }
+    @Inject
+    @Any
+    lateinit var providers: Instance<SmsProvider>
 
     var random: Random = Random()
 
@@ -52,4 +49,15 @@ class RandomProviderRouter(val providers: Instance<SmsProvider>) : ProviderRoute
         }
     }
 
+    /**
+     * If there are mo providers configured then quit the application
+     */
+    @PostConstruct
+    fun init() {
+        if (providers.isUnsatisfied()) {
+            log.error { "******* Application is quitting as at least one SMS Provider must be configured ********" }
+            exitProcess(1)
+        }
+        providers.forEach { log.debug { "Provider: $it has been configured to send messages" } }
+    }
 }
