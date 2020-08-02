@@ -14,7 +14,6 @@ import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
-@IfBuildProperty(name = "sms.provider.twilio.enabled", stringValue = "true")
 class TwilioProvider : SmsProvider {
 
     private val log = KotlinLogging.logger {}

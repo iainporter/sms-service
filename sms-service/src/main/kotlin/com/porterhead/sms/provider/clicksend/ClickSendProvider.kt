@@ -21,7 +21,6 @@ import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
 
 
-@IfBuildProperty(name = "sms.provider.clicksend.enabled", stringValue = "true")
 @ApplicationScoped
 class ClickSendProvider : SmsProvider {
 
