@@ -10,8 +10,7 @@ import javax.inject.Inject
 import kotlin.system.exitProcess
 
 @ApplicationScoped
-class RandomProviderRouter(@Inject
-                           var providers: Instance<SmsProvider>) : ProviderRouter {
+class RandomProviderRouter(val providers: Instance<SmsProvider>) : ProviderRouter {
 
     private val log = KotlinLogging.logger {}
 
@@ -39,7 +38,7 @@ class RandomProviderRouter(@Inject
         message.provider = provider.getName()
         val status = provider.sendSms(message)
         //only retry when there is a failed message
-        if (status is ProviderResponse.FAILED && providers.count() > 1) {
+        return if (status is ProviderResponse.FAILED && providers.count() > 1) {
             var nextIndex: Int
             do {
                 nextIndex = random.nextInt(providers.count())
@@ -47,10 +46,9 @@ class RandomProviderRouter(@Inject
             val provider = providers.toList()[nextIndex]
             message.provider = provider.getName()
             log.debug("retrying message with different provider {}", provider.getName())
-            return provider.sendSms(message)
+            provider.sendSms(message)
         } else {
-            return status
+            status
         }
     }
-
 }
