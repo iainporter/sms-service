@@ -52,7 +52,7 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
   kafka-connect:
-    image: debezium/connect:1.2.0.Final
+    image: debezium/connect:1.2.1.Final
     ports:
       - 8083:8083
     links:

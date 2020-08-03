@@ -27,7 +27,7 @@ abstract class BaseComponentTst {
                 .withPassword("postgres")
                 .withDatabaseName("sms")
 
-        var debeziumContainer = DebeziumContainer("debezium/connect:1.2.0.Final")
+        var debeziumContainer = DebeziumContainer("debezium/connect:1.2.1.Final")
                 .withNetwork(network)
                 .withExposedPorts(8083)
                 .withKafka(kafkaContainer)
