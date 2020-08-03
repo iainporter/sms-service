@@ -1,6 +1,7 @@
 package com.porterhead.sms.provider.clicksend
 
 import ClickSend.Model.SmsMessageCollection
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.porterhead.sms.domain.SmsMessage
@@ -48,7 +49,7 @@ class ClickSendProvider : SmsProvider {
         apiCreds = Base64.getEncoder().encodeToString("$username:$apiKey".toByteArray())
     }
 
-    val gson = GsonBuilder().create()
+    val gson: Gson = GsonBuilder().create()
 
     override fun sendSms(message: SmsMessage) : ProviderResponse {
         log.debug("Sending SMS via ClickSend Service to {}", message.toNumber)
