@@ -4,6 +4,7 @@ See accompanying blog posts
 
 * [Part One - Building a microservice from the ground up with quarkus kotlin and debezium]( https://medium.com/@changeant/building-a-microservice-from-the-ground-up-with-quarkus-kotlin-and-debezium-83ae5c8a8bbc)
 * [Part Two - Implementing the transactional outbox pattern with debezium in quarkus](https://medium.com/@changeant/implementing-the-transactional-outbox-pattern-with-debezium-in-quarkus-f2680306951)
+* [Part Three - Building a resilient microservice with quarkus and wiremock](https://levelup.gitconnected.com/building-a-resilient-microservice-with-quarkus-and-wiremock-de59b2a4fac7)
 
 A production quality micro service for sending SMS messages that demonstrates the use of several technologies including:
 
