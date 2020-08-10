@@ -23,10 +23,13 @@ A production quality micro service for sending SMS messages that demonstrates th
 * Wiremock
 
 The service accepts SMS messages and routes them to configured providers
+
 The service has support for Twilio and ClickSend 
+
 New providers can easily be plugged in by implementing com.porterhead.sms.provider.SmsProvider
 
 You can build the service, but it won't accept messages unless there is at least one provider configured
+
 To configure the service, sign up to Twilio and/or ClickSend and add the appropriate properties
 to a config/application.properties file. See application.properties.sample 
 
