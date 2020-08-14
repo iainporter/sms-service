@@ -2,46 +2,28 @@ package com.porterhead.sms.provider
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration
-import com.porterhead.sms.domain.MessageStatus.DELIVERED
-import com.porterhead.sms.domain.MessageStatus.FAILED
+import com.porterhead.sms.WiremockTestResource
 import com.porterhead.sms.domain.SmsMessage
 import com.porterhead.sms.provider.clicksend.ClickSendData
 import com.porterhead.sms.provider.clicksend.ClickSendProvider
 import com.porterhead.sms.provider.twilio.TwilioData
 import com.porterhead.sms.provider.twilio.TwilioProvider
 import com.porterhead.sms.resource.GetSmsMessageResourceTest
+import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Test
 import javax.inject.Inject
 import javax.transaction.Transactional
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @QuarkusTest
+@QuarkusTestResource(WiremockTestResource::class)
 @Transactional
 class RandomProviderRouterTest {
 
     @Inject
     lateinit var providerRouter: RandomProviderRouter
 
-    //TODO figure out how to set dynamic port in application-test.properties
-    val wireMockServer = WireMockServer(WireMockConfiguration().port(2345))
-
-    @BeforeAll
-    fun setup() {
-        wireMockServer.start()
-    }
-
-    @AfterAll
-    fun tearDown() {
-        wireMockServer.stop()
-    }
-
-    @BeforeEach
-    fun reset() {
-        wireMockServer.resetAll()
-
-    }
+    lateinit var mockServer : WireMockServer
 
     @Test
     fun `message is routed to random provider`() {
@@ -82,7 +64,7 @@ class RandomProviderRouterTest {
     }
 
     private fun setTwilioWiremock(status: Int, body: String) {
-        wireMockServer.stubFor(WireMock.post(WireMock.urlPathMatching("/twilio-wiremock"))
+        mockServer.stubFor(WireMock.post(WireMock.urlPathMatching("/twilio-wiremock"))
                 .willReturn(WireMock.aResponse()
                         .withStatus(status)
                         .withHeader("Content-Type", "application/json")
@@ -90,7 +72,7 @@ class RandomProviderRouterTest {
     }
 
     private fun setClickSendWiremock(status: Int, body: String) {
-        wireMockServer.stubFor(WireMock.post(WireMock.urlPathMatching("/clicksend-wiremock"))
+        mockServer.stubFor(WireMock.post(WireMock.urlPathMatching("/clicksend-wiremock"))
                 .willReturn(WireMock.aResponse()
                         .withStatus(status)
                         .withHeader("Content-Type", "application/json")

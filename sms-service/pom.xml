@@ -113,10 +113,15 @@
     </dependency>
 
     <!-- security-->
-<!--    <dependency>-->
-<!--      <groupId>io.quarkus</groupId>-->
-<!--      <artifactId>quarkus-oidc</artifactId>-->
-<!--    </dependency>-->
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-oidc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.nimbusds</groupId>
+      <artifactId>nimbus-jose-jwt</artifactId>
+      <version>8.20</version>
+    </dependency>
 
     <!-- SMS providers-->
     <dependency>
@@ -384,7 +389,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-failsafe-plugin</artifactId>
-            <version>3.0.0-M4</version>
+            <version>3.0.0-M3</version>
             <executions>
               <execution>
                 <goals>

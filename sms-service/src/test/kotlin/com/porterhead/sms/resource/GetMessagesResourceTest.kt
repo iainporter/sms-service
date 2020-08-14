@@ -6,6 +6,7 @@ import com.porterhead.api.sms.Message
 import com.porterhead.api.sms.PagedMessageResponse
 import com.porterhead.api.sms.PagedMessageResponsePage
 import com.porterhead.sms.SmsService
+import com.porterhead.sms.WiremockTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.mockito.InjectMock
 import io.restassured.RestAssured
@@ -20,7 +21,7 @@ import java.util.*
 import javax.ws.rs.core.Response
 
 @QuarkusTest
-class GetMessagesResourceTest {
+class GetMessagesResourceTest : WiremockTestResource(){
 
     @InjectMock
     lateinit var smsService: SmsService
@@ -32,6 +33,7 @@ class GetMessagesResourceTest {
         val response = RestAssured.given()
                 .`when`()
                 .contentType(ContentType.JSON)
+                .auth().oauth2(generateJWT(keyPair))
                 .get("/v1/sms?status=WAITING&sort=createdAt:desc")
                 .then()
                 .log().all()
@@ -45,7 +47,19 @@ class GetMessagesResourceTest {
         assertEquals(response.page?.numberOfElements, 10)
         assertEquals(response.page?.totalElements, 100)
         assertEquals(response.page?.totalPages, 1)
+    }
 
+    @Test
+    @DisplayName("GET /v1/sms/{id} returns 401")
+    fun testGetMessages_Unauthorized() {
+        whenever(smsService.getMessages(any())).thenReturn(testDouble())
+        RestAssured.given()
+                .`when`()
+                .contentType(ContentType.JSON)
+                .get("/v1/sms?status=WAITING&sort=createdAt:desc")
+                .then()
+                .log().all()
+                .statusCode(Response.Status.UNAUTHORIZED.statusCode)
     }
 
     private fun testDouble(): PagedMessageResponse {

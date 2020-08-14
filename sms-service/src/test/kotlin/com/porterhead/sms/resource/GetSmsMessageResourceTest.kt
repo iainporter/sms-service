@@ -3,6 +3,7 @@ package com.porterhead.sms.resource
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import com.porterhead.sms.SmsService
+import com.porterhead.sms.WiremockTestResource
 import com.porterhead.sms.domain.SmsMessage
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.mockito.InjectMock
@@ -15,7 +16,7 @@ import javax.ws.rs.NotFoundException
 import javax.ws.rs.core.Response
 
 @QuarkusTest
-class GetSmsMessageResourceTest {
+class GetSmsMessageResourceTest : WiremockTestResource(){
 
     companion object {
         val id: UUID = UUID.fromString("47b56dd0-73d4-485e-b5e7-0489865973a1")
@@ -31,6 +32,7 @@ class GetSmsMessageResourceTest {
         RestAssured.given()
                 .`when`()
                 .contentType(ContentType.JSON)
+                .auth().oauth2(generateJWT(keyPair))
                 .get("/v1/sms/$id")
                 .then()
                 .log().all()
@@ -44,10 +46,24 @@ class GetSmsMessageResourceTest {
         RestAssured.given()
                 .`when`()
                 .contentType(ContentType.JSON)
+                .auth().oauth2(generateJWT(keyPair))
                 .get("/v1/sms/$id")
                 .then()
                 .log().all()
                 .statusCode(Response.Status.NOT_FOUND.statusCode)
+    }
+
+    @Test
+    @DisplayName("GET /v1/sms/{id} returns 401")
+    fun testGetMessageUnauthorized() {
+        whenever(smsService.getMessage(any())).thenThrow(NotFoundException::class.java)
+        RestAssured.given()
+                .`when`()
+                .contentType(ContentType.JSON)
+                .get("/v1/sms/$id")
+                .then()
+                .log().all()
+                .statusCode(Response.Status.UNAUTHORIZED.statusCode)
     }
 
     private fun testDouble(): SmsMessage {

@@ -3,6 +3,7 @@ package com.porterhead.sms.resource
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import com.porterhead.sms.SmsService
+import com.porterhead.sms.WiremockTestResource
 import com.porterhead.sms.domain.SmsMessage
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.mockito.InjectMock
@@ -14,7 +15,7 @@ import org.junit.jupiter.api.Test
 import javax.ws.rs.core.Response
 
 @QuarkusTest
-class SendSmsResourceTest {
+class SendSmsResourceTest : WiremockTestResource(){
 
     @InjectMock
     lateinit var smsService: SmsService
@@ -26,6 +27,7 @@ class SendSmsResourceTest {
         given()
                 .`when`()
                 .contentType(ContentType.JSON)
+                .auth().oauth2(generateJWT(keyPair))
                 .body("""{"text":"Hello World", "fromNumber":"+1234567890", "toNumber":"+1234567899"}""")
                 .post("/v1/sms")
                 .then()
@@ -35,11 +37,41 @@ class SendSmsResourceTest {
     }
 
     @Test
+    @DisplayName("POST /v1/sms fails with 401 due to no bearer token")
+    fun testUnauthorized() {
+        given()
+                .`when`()
+                .contentType(ContentType.JSON)
+                .body("""{"text":"Hello World", "fromNumber":"+1234567890", "toNumber":"+1234567899"}""")
+                .post("/v1/sms")
+                .then()
+                .log().all()
+                .statusCode(Response.Status.UNAUTHORIZED.statusCode)
+    }
+
+    @Test
+    @DisplayName("POST /v1/sms fails with 403 due to invalid signature")
+    fun testForbidden() {
+        //create a new signing key that is  unknown to the OIDC server
+        val unknownKeyPair = generatePrivateKey()
+        given()
+                .`when`()
+                .contentType(ContentType.JSON)
+                .auth().oauth2(generateJWT(unknownKeyPair))
+                .body("""{"text":"Hello World", "fromNumber":"+1234567890", "toNumber":"+1234567899"}""")
+                .post("/v1/sms")
+                .then()
+                .log().all()
+                .statusCode(Response.Status.FORBIDDEN.statusCode)
+    }
+
+    @Test
     @DisplayName("Missing Required property returns a 400")
     fun testMissingTextProperty() {
         given()
                 .`when`()
                 .contentType(ContentType.JSON)
+                .auth().oauth2(generateJWT(keyPair))
                 .body("""{"fromNumber":"+1234567890", "toNumber":"+1234567899"}""")
                 .post("/v1/sms")
                 .then()
@@ -53,6 +85,7 @@ class SendSmsResourceTest {
         given()
                 .`when`()
                 .contentType(ContentType.JSON)
+                .auth().oauth2(generateJWT(keyPair))
                 .body("""{"text":"Hello World", "fromNumber":"1234567890", "toNumber":"+1234567899"}""")
                 .post("/v1/sms")
                 .then()

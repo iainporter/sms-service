@@ -7,7 +7,9 @@ import com.porterhead.sms.SmsService
 import com.porterhead.sms.domain.MessageStatus
 import com.porterhead.sms.domain.SmsMessage
 import io.quarkus.panache.common.Page
+import io.quarkus.security.Authenticated
 import java.util.*
+import javax.enterprise.context.RequestScoped
 import javax.enterprise.inject.Default
 import javax.inject.Inject
 import javax.validation.Valid
@@ -21,6 +23,7 @@ import javax.ws.rs.core.UriInfo
 @Path("/v1/sms")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RequestScoped
 class SmsResource {
 
     @Inject
@@ -28,6 +31,7 @@ class SmsResource {
     lateinit var smsService: SmsService
 
     @POST
+    @Authenticated
     fun sendSms(@Valid smsRequest: SendSmsRequest, @Context uriInfo: UriInfo): Response {
         val message: SmsMessage = smsService.createMessage(smsRequest)
         // build the Location header
@@ -39,6 +43,7 @@ class SmsResource {
     }
 
     @GET
+    @Authenticated
     fun queryForMessages(@QueryParam("status") status: Message.StatusEnum?,
                          @QueryParam("toNumber") toNumber: String?,
                          @QueryParam("page") page: Int?,
@@ -56,6 +61,7 @@ class SmsResource {
 
     @GET
     @Path("/{id}")
+    @Authenticated
     fun getMessage(@PathParam("id") id: UUID): Response {
         val message: SmsMessage = smsService.getMessage(id)
         return Response.ok(message.toMessageResponse()).build()

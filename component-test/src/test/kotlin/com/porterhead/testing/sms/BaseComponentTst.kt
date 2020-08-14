@@ -1,11 +1,13 @@
 package com.porterhead.testing.sms
 
+import com.porterhead.testing.RestFunctions
 import io.debezium.testing.testcontainers.DebeziumContainer
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.awaitility.Awaitility
 import org.junit.BeforeClass
 import org.testcontainers.containers.*
+import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.lifecycle.Startables
 import org.testcontainers.utility.MountableFile
 import java.util.concurrent.TimeUnit
@@ -33,6 +35,17 @@ abstract class BaseComponentTst {
                 .withKafka(kafkaContainer)
                 .dependsOn(kafkaContainer)
 
+        var keycloakContainer = KGenericContainer("quay.io/keycloak/keycloak:11.0.0")
+                .withNetwork(network)
+                .withNetworkAliases("keycloak")
+                .withExposedPorts(8080)
+                .withEnv("KEYCLOAK_USER", "admin")
+                .withEnv("KEYCLOAK_PASSWORD", "admin")
+                .withEnv("KEYCLOAK_IMPORT", "/tmp/realm.json")
+                .withEnv("JAVA_OPTS", "-Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled")
+                .withClasspathResourceMapping("config/porterhead-realm.json", "/tmp/realm.json", BindMode.READ_ONLY)
+                .waitingFor(Wait.forHttp("/auth"))
+
         var smsServiceContainer = KGenericContainer("porterhead/sms-service")
                 .withNetwork(network)
                 .withNetworkAliases("sms-service")
@@ -42,12 +55,15 @@ abstract class BaseComponentTst {
                 .withEnv("quarkus.datasource.jdbc.url", "jdbc:postgresql://postgres-db:5432/sms")
                 .withCopyFileToContainer(MountableFile.forClasspathResource("/config/application.properties"), "/deployments/config/application.properties")
                 .dependsOn(postgresContainer)
+                .dependsOn(keycloakContainer)
 
         var mockServerContainer = KGenericContainer("porterhead/wiremock")
                 .withNetwork(network)
                 .withNetworkAliases("wiremock")
                 .withExposedPorts(8080)
                 .withClasspathResourceMapping("/config/wiremock", "/var/wiremock/mappings", BindMode.READ_WRITE)
+
+        lateinit var restFunctions: RestFunctions
 
         @BeforeClass
         @JvmStatic
@@ -56,12 +72,19 @@ abstract class BaseComponentTst {
             val kafkaBootstrap: String = kafkaContainer.bootstrapServers
             System.setProperty("kafka.bootstrap.servers", kafkaBootstrap)
             Startables.deepStart(Stream.of(
-                    kafkaContainer, postgresContainer, debeziumContainer, smsServiceContainer, mockServerContainer))
+                    kafkaContainer,
+                    postgresContainer,
+                    debeziumContainer,
+                    smsServiceContainer,
+                    mockServerContainer,
+                    keycloakContainer))
                     .join()
             registerKafkaConnector(debeziumContainer.getMappedPort(8083))
             waitForConnector(debeziumContainer.getMappedPort(8083))
             val port = smsServiceContainer.firstMappedPort
             RestAssured.baseURI = "http://localhost:$port"
+            //initialize RestFunctions using the mapped port for the keycloak server
+            restFunctions =  RestFunctions(keycloakContainer.firstMappedPort)
         }
 
         fun registerKafkaConnector(port: Int) {

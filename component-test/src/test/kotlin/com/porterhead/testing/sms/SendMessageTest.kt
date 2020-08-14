@@ -1,12 +1,5 @@
 package com.porterhead.testing.sms
 
-import com.porterhead.testing.RestFunctions
-import com.porterhead.testing.RestFunctions.failureToNumberAll
-import com.porterhead.testing.RestFunctions.getMessageById
-import com.porterhead.testing.RestFunctions.sendSmsMessage
-import com.porterhead.testing.RestFunctions.successToNumberAll
-import com.porterhead.testing.RestFunctions.successToNumberClicksend
-import com.porterhead.testing.RestFunctions.successToNumberTwilio
 import io.restassured.path.json.JsonPath
 import org.awaitility.Awaitility
 import org.junit.Test
@@ -15,6 +8,18 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
 class SendMessageTest : BaseComponentTst() {
+
+    /** This number will be mapped to success for all providers*/
+    private val successToNumberAll = "+1111111111"
+
+    /** This number will be mapped to success for clicksend but not Twilio*/
+    private val successToNumberClicksend = "+2222222222"
+
+    /** This number will be mapped to success for twilio but not ClickSend*/
+    private val successToNumberTwilio = "+3333333333"
+
+    /** This number will be mapped to failure for twilio and ClickSend*/
+    private val failureToNumberAll = "+4444444444"
 
     @Test
     fun `a valid request to send a SMS Message`() {
@@ -42,15 +47,15 @@ class SendMessageTest : BaseComponentTst() {
 
     @Test
     fun `Message is not found`() {
-        getMessageById(UUID.randomUUID().toString(), 404)
+        restFunctions.getMessageById(UUID.randomUUID().toString(), 404)
     }
 
     private fun sendMessageAndAssertStatus(request: String, status: String) {
-        val response = sendSmsMessage(request)
+        val response = restFunctions.sendSmsMessage(request)
         val location = response.header("Location")
         //check the message has been processed
         Awaitility.await().atMost(20, TimeUnit.SECONDS).pollInterval(500, MILLISECONDS).until {
-            val messageResponse = RestFunctions.getMessage(location)
+            val messageResponse = restFunctions.getMessage(location)
             val json : JsonPath = messageResponse.body.jsonPath()
             json.getString("status") == status
         }
