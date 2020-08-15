@@ -8,6 +8,7 @@ import com.porterhead.sms.domain.MessageStatus
 import com.porterhead.sms.domain.SmsMessage
 import io.quarkus.panache.common.Page
 import io.quarkus.security.Authenticated
+import org.eclipse.microprofile.jwt.JsonWebToken
 import java.util.*
 import javax.enterprise.context.RequestScoped
 import javax.enterprise.inject.Default
@@ -30,10 +31,13 @@ class SmsResource {
     @field: Default
     lateinit var smsService: SmsService
 
+    @Inject
+    lateinit var jwt: JsonWebToken
+
     @POST
     @Authenticated
     fun sendSms(@Valid smsRequest: SendSmsRequest, @Context uriInfo: UriInfo): Response {
-        val message: SmsMessage = smsService.createMessage(smsRequest)
+        val message: SmsMessage = smsService.createMessage(smsRequest, jwt.subject)
         // build the Location header
         val builder = uriInfo.absolutePathBuilder
         val uriComponents = builder.path("/{id}").build(message.id)

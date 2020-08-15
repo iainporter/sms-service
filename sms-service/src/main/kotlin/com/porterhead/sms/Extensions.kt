@@ -15,6 +15,8 @@ fun SmsMessage.toMessageResponse(): Message {
     message.toNumber = toNumber
     message.text = text
     message.status = Message.StatusEnum.fromValue(status.name)
+    message.provider = provider
+    message.principal = principal
     message.createdAt = OffsetDateTime.ofInstant(createdAt, ZoneId.of("UTC"))
     message.updatedAt = OffsetDateTime.ofInstant(updatedAt, ZoneId.of("UTC"))
     return message

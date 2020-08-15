@@ -84,6 +84,8 @@ class GetMessagesResourceTest : WiremockTestResource(){
         message.toNumber = "+1234567890"
         message.fromNumber = "+10987654321"
         message.text = "Foo"
+        message.provider = "Twilio"
+        message.principal = "backend-service"
         message.createdAt = OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC"))
         message.updatedAt = OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC"))
         return message

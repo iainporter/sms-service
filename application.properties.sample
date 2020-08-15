@@ -15,3 +15,6 @@ sms.provider.twilio.account.sid=
 sms.provider.twilio.endpoint=https://api.twilio.com/2010-04-01/Accounts/<your account.sid>/Messages.json
 sms.provider.twilio.auth.token=
 sms.provider.twilio.from.number=
+
+quarkus.oidc.auth-server-url=
+quarkus.oidc.client-id=

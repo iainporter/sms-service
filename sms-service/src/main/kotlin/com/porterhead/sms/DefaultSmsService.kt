@@ -34,12 +34,13 @@ class DefaultSmsService: SmsService {
     lateinit var event : Event<ExportedEvent<String, JsonNode>>
 
     @Transactional
-    override fun createMessage(request: SendSmsRequest): SmsMessage {
+    override fun createMessage(request: SendSmsRequest, principal: String): SmsMessage {
         log.debug { "Persisting new SMS Message" }
-        var entity = SmsMessage(
+        val entity = SmsMessage(
                 fromNumber = request.fromNumber,
                 toNumber = request.toNumber,
-                text = request.text)
+                text = request.text,
+                principal = principal)
         messageRepository.persist(entity)
         log.debug { "Firing message created event" }
         event.fire(SmsMessageCreatedEvent.fromSmsMessage(entity))

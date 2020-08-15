@@ -30,8 +30,21 @@ New providers can easily be plugged in by implementing com.porterhead.sms.provid
 
 You can build the service, but it won't accept messages unless there is at least one provider configured
 
+#Configuring the Service
 To configure the service, sign up to Twilio and/or ClickSend and add the appropriate properties
-to a config/application.properties file. See application.properties.sample 
+to a config/application.properties file.
+
+Sign up to Okta or any other OIDC provider of your choice and add the base url to the properties file
+Create a client in your OIDC domain and add the client-id to the config
+
+An example for Okta would be 
+
+```
+quarkus.oidc.auth-server-url=https://<your okta id>.okta.com/oauth2/<your okta domain>
+quarkus.oidc.client-id=<your client-id>
+```
+ 
+See application.properties.sample 
 
 Ensure the config directory is mounted by checking the path in the docker-compose.yml file
 
@@ -67,10 +80,13 @@ curl 'localhost:8083/connectors/' -i -X POST -H "Accept:application/json" -H "Co
 -d '{"name": "sms-connector", "config": {"connector.class": "io.debezium.connector.postgresql.PostgresConnector", "database.hostname": "postgres-db", "database.port": "5432", "database.user": "postgres", "database.password": "postgres", "database.dbname" : "sms", "database.server.name": "smsdb1", "table.whitelist": "public.outboxevent", "transforms" : "outbox","transforms.outbox.type" : "io.debezium.transforms.outbox.EventRouter", "transforms.OutboxEventRouter.event.key": "aggregate_id", "transforms.outbox.table.fields.additional.placement": "type:header:eventType"}}'    
 ```
 
+Login to the OIDC provider you configured above and obtain an access token
+
 To send a message
 ```
 curl 'http://localhost:8080/v1/sms' -i -X POST  \
    -H 'Content-Type: application/json'  \
+    -H 'authorization: Bearer <your access token>'
    -d '{"text":"Foo Bar!", "fromNumber": "+1234567890", "toNumber": "+1234567891"}'
 ```
 
@@ -81,8 +97,9 @@ HTTP/1.1 202 Accepted
 Content-Length: 0
 Location: http://localhost:8080/v1/sms/b3a20fac-2d00-49d2-b3ef-b3a3e5ac02ca
 ```
-```
-curl http://localhost:8080/v1/sms/b3a20fac-2d00-49d2-b3ef-b3a3e5ac02ca
+curl 'http://localhost:8080/v1/sms/b3a20fac-2d00-49d2-b3ef-b3a3e5ac02ca' -i -X GET  \
+   -H 'Content-Type: application/json'  \
+   -H 'authorization: Bearer <your access token>'
 ```
 you should see a response similar to this
 
@@ -93,6 +110,8 @@ you should see a response similar to this
 "id":"b3a20fac-2d00-49d2-b3ef-b3a3e5ac02ca",
 "status":"DELIVERED",
 "text":"Foo Bar!",
+"provider": "Twilio",
+"principal": "backend-service",
 "toNumber":"+1234567891",
 "updatedAt":"2020-07-16T16:44:00.432926Z"
 }

@@ -40,6 +40,14 @@ properties:
       - WAITING
       - DELIVERED
       - FAILED
+  provider:
+    type: string
+    description: The provider that the message was sent to
+    example: Twilio
+  principal:
+    type: string
+    description: The identifier of the principal who sent the message
+    example: backend-service
   createdAt:
     type: string
     format: date-time

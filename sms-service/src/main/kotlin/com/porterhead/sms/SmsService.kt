@@ -9,7 +9,7 @@ import java.util.*
 
 interface SmsService {
 
-    fun createMessage(request: SendSmsRequest): SmsMessage
+    fun createMessage(request: SendSmsRequest, principal: String): SmsMessage
 
     fun getMessage(id: UUID): SmsMessage
 

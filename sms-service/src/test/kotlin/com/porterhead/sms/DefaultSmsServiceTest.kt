@@ -23,6 +23,8 @@ class DefaultSmsServiceTest {
     @Inject
     lateinit var messageRepository: MessageRepository
 
+    val principal = "foo"
+
     @BeforeEach
     @Transactional
     fun setup() {
@@ -32,7 +34,7 @@ class DefaultSmsServiceTest {
     @Test
     fun `A valid message is persisted and retrieved`() {
         var request = getSendSmsRequest()
-        val message = smsService.createMessage(request)
+        val message = smsService.createMessage(request, principal)
         val foundMessage = smsService.getMessage(message.id)
         assertEquals(message, foundMessage)
     }
@@ -41,7 +43,7 @@ class DefaultSmsServiceTest {
     fun `paging result set by MessageStatus`() {
         //create 100 messages
         (1..100).forEach{
-            smsService.createMessage(getSendSmsRequest())}
+            smsService.createMessage(getSendSmsRequest(), principal)}
         //get the first 10
         var response = smsService.getMessages(PageableQuery(Page(0, 10), QueryRequest.Builder().status(MessageStatus.WAITING).build()))
         assertResults(response)
@@ -54,7 +56,7 @@ class DefaultSmsServiceTest {
     fun `paging result set by ToNumber`() {
         //create 100 messages
         (1..100).forEach{
-            smsService.createMessage(getSendSmsRequest())}
+            smsService.createMessage(getSendSmsRequest(), principal)}
         //get the first 10
         var response = smsService.getMessages(PageableQuery(Page(0, 10), QueryRequest.Builder().toNumber("+10234567890").build()))
         assertResults(response)
@@ -64,7 +66,7 @@ class DefaultSmsServiceTest {
     fun `find all messages`() {
         //create 100 messages
         (1..100).forEach{
-            smsService.createMessage(getSendSmsRequest())}
+            smsService.createMessage(getSendSmsRequest(), principal)}
         //get the first 10
         var response = smsService.getMessages(PageableQuery(Page(0, 10), QueryRequest.Builder().build()))
         assertResults(response)
@@ -74,7 +76,7 @@ class DefaultSmsServiceTest {
     fun `no messages found`() {
         //create 100 messages
         (1..100).forEach{
-            smsService.createMessage(getSendSmsRequest())}
+            smsService.createMessage(getSendSmsRequest(), principal)}
         var response = smsService.getMessages(PageableQuery(Page(0, 10), QueryRequest.Builder().status(MessageStatus.FAILED).build()))
         assertEquals(0, response.page?.numberOfElements)
         assertEquals(10, response.page?.pageSize)
@@ -86,7 +88,7 @@ class DefaultSmsServiceTest {
     fun `paging result set by MessageStatus AND toNumber`() {
         //create 100 messages
         (1..100).forEach{
-            smsService.createMessage(getSendSmsRequest())}
+            smsService.createMessage(getSendSmsRequest(), principal)}
         //get the first 10
         var response = smsService.getMessages(PageableQuery(Page(0, 10), QueryRequest.Builder().status(MessageStatus.WAITING).toNumber("+10234567890").build()))
         assertResults(response)
@@ -96,7 +98,7 @@ class DefaultSmsServiceTest {
     fun `sort by status` () {
         //create 10 messages
         (1..100).forEach{
-            smsService.createMessage(getSendSmsRequest())
+            smsService.createMessage(getSendSmsRequest(), principal)
         }
         var response = smsService.getMessages(PageableQuery(Page(0, 10), QueryRequest.Builder().sortString("status:desc").build()))
         assertResults(response)
@@ -106,7 +108,7 @@ class DefaultSmsServiceTest {
     fun `sort by status and createdAt` () {
         //create 10 messages
         (1..100).forEach{
-            smsService.createMessage(getSendSmsRequest())
+            smsService.createMessage(getSendSmsRequest(), principal)
         }
         var response = smsService.getMessages(PageableQuery(Page(0, 10), QueryRequest.Builder().sortString("status:desc,createdAt:desc").build()))
         assertResults(response)

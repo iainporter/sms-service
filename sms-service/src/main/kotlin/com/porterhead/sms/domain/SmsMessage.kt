@@ -30,6 +30,9 @@ data class SmsMessage(
         var updatedAt: Instant = Instant.now(),
 
         @Column(nullable = false)
-        var provider: String = ""
+        var provider: String = "",
+
+        @Column(nullable = false)
+        var principal: String = ""
 )
 

@@ -23,7 +23,7 @@ class SendSmsResourceTest : WiremockTestResource(){
     @Test
     @DisplayName("POST /v1/sms with valid request returns 202")
     fun testSuccessfulSend() {
-        whenever(smsService.createMessage(any())).thenReturn(testDouble())
+        whenever(smsService.createMessage(any(), any())).thenReturn(testDouble())
         given()
                 .`when`()
                 .contentType(ContentType.JSON)

@@ -49,8 +49,8 @@ open class WiremockTestResource : QuarkusTestResourceLifecycleManager {
         val signer: JWSSigner = RSASSASigner(keyPair.toRSAKey())
         // Prepare JWT with claims set
         val claimsSet = JWTClaimsSet.Builder()
-                .subject("sms-service")
-                .issuer("https://c2id.com")
+                .subject("backend-service")
+                .issuer("https://example.com")
                 .expirationTime(Date(Date().time + 60 * 1000))
                 .build()
         val signedJWT = SignedJWT(
@@ -59,7 +59,6 @@ open class WiremockTestResource : QuarkusTestResourceLifecycleManager {
         // Compute the RSA signature
         signedJWT.sign(signer)
         return signedJWT.serialize()
-
     }
 
     override fun stop() {
@@ -73,7 +72,7 @@ open class WiremockTestResource : QuarkusTestResourceLifecycleManager {
      * @param request the json stub
      * @return the response of the new mapping
      */
-    fun postStubMapping(request: String): ResponseBody<*> {
+    private fun postStubMapping(request: String): ResponseBody<*> {
         RestAssured.baseURI = wireMockServer.baseUrl()
         return RestAssured.given()
                 .body(request)
@@ -103,7 +102,7 @@ open class WiremockTestResource : QuarkusTestResourceLifecycleManager {
                  "headers": {
                      "Content-Type": "application/json;charset=UTF-8"
                  },
-             "jsonBody": {
+            "jsonBody": {
                  	"issuer": "${wireMockServer.baseUrl()}/mock-server",
 	                "authorization_endpoint": "${wireMockServer.baseUrl()}/v1/authorize",
 	                "token_endpoint": "${wireMockServer.baseUrl()}/v1/token",
@@ -126,8 +125,8 @@ open class WiremockTestResource : QuarkusTestResourceLifecycleManager {
 	                "end_session_endpoint": "${wireMockServer.baseUrl()}/v1/logout",
 	                "request_parameter_supported": true,
 	                "request_object_signing_alg_values_supported": ["HS256", "HS384", "HS512", "RS256", "RS384", "RS512", "ES256", "ES384", "ES512"]
-                 }
             }
+        }
         }
         """
     }
