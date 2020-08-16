@@ -100,10 +100,12 @@ HTTP/1.1 202 Accepted
 Content-Length: 0
 Location: http://localhost:8080/v1/sms/b3a20fac-2d00-49d2-b3ef-b3a3e5ac02ca
 ```
+```
 curl 'http://localhost:8080/v1/sms/b3a20fac-2d00-49d2-b3ef-b3a3e5ac02ca' -i -X GET  \
    -H 'Content-Type: application/json'  \
    -H 'authorization: Bearer <your access token>'
 ```
+
 you should see a response similar to this
 
 ```
