@@ -38,7 +38,7 @@ class SendSmsResourceTest : WiremockTestResource(){
 
     @Test
     @DisplayName("POST /v1/sms fails with 401 due to no bearer token")
-    fun testUnauthorized() {
+    fun testNoBearerToken() {
         given()
                 .`when`()
                 .contentType(ContentType.JSON)
@@ -50,8 +50,8 @@ class SendSmsResourceTest : WiremockTestResource(){
     }
 
     @Test
-    @DisplayName("POST /v1/sms fails with 403 due to invalid signature")
-    fun testForbidden() {
+    @DisplayName("POST /v1/sms fails with 401 due to invalid signature")
+    fun testUnknownOidcProvider() {
         //create a new signing key that is  unknown to the OIDC server
         val unknownKeyPair = generatePrivateKey()
         given()
@@ -62,7 +62,7 @@ class SendSmsResourceTest : WiremockTestResource(){
                 .post("/v1/sms")
                 .then()
                 .log().all()
-                .statusCode(Response.Status.FORBIDDEN.statusCode)
+                .statusCode(Response.Status.UNAUTHORIZED.statusCode)
     }
 
     @Test
