@@ -8,7 +8,7 @@
   <parent>
     <groupId>com.porterhead</groupId>
     <artifactId>sms-service-parent</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
   </parent>
 
   <properties>
@@ -34,6 +34,10 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-rest-client</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -82,11 +86,6 @@
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib-jdk8</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.github.rybalkinsd</groupId>
-      <artifactId>kohttp</artifactId>
-      <version>0.12.0</version>
     </dependency>
     <!-- validation -->
     <dependency>

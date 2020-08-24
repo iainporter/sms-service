@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "urlPattern": "/clicksend-wiremock",
+    "urlPattern": "/v3/sms/send",
     "bodyPatterns": [
       { "matchesJsonPath" : "$..[?(@.to=='+1111111111' || @.to=='+2222222222')]$"}
     ]

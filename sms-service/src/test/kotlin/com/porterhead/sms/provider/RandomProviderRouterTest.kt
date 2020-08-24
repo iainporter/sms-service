@@ -6,6 +6,7 @@ import com.porterhead.sms.WiremockTestResource
 import com.porterhead.sms.domain.SmsMessage
 import com.porterhead.sms.provider.clicksend.ClickSendData
 import com.porterhead.sms.provider.clicksend.ClickSendProvider
+import com.porterhead.sms.provider.clicksend.ClickSendRestClient
 import com.porterhead.sms.provider.twilio.TwilioData
 import com.porterhead.sms.provider.twilio.TwilioProvider
 import com.porterhead.sms.resource.GetSmsMessageResourceTest
@@ -45,7 +46,7 @@ class RandomProviderRouterTest {
         setTwilioWiremock(500, TwilioData().serviceUnavailable)
         setClickSendWiremock(200, ClickSendData().validResponse)
         val response = providerRouter.routeMessage(messageDouble())
-        assert(response is ProviderResponse.SUCCESS && response.providerName == ClickSendProvider().getName())
+        assert(response is ProviderResponse.SUCCESS && response.providerName == "ClickSend")
 
     }
 
