@@ -1,414 +1,473 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.porterhead</groupId>
-  <artifactId>sms-service</artifactId>
-
-  <parent>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
     <groupId>com.porterhead</groupId>
-    <artifactId>sms-service-parent</artifactId>
+    <artifactId>sms-service</artifactId>
     <version>1.0.4</version>
-  </parent>
+    <parent>
+        <groupId>com.porterhead</groupId>
+        <artifactId>sms-service-parent</artifactId>
+        <version>1.0.4</version>
+    </parent>
 
-  <properties>
-    <gson.version>2.8.6</gson.version>
-    <mockito.kotlin.version>1.6.0</mockito.kotlin.version>
-    <mockk.version>1.9.3</mockk.version>
-  </properties>
+    <properties>
+        <gson.version>2.8.6</gson.version>
+        <mockito.kotlin.version>1.6.0</mockito.kotlin.version>
+        <mockk.version>1.9.3</mockk.version>
+        <nimbus-jose-jwt.version>8.20</nimbus-jose-jwt.version>
+        <twilio.version>7.12.0</twilio.version>
+        <clicksend-java-client.version>1.0.0</clicksend-java-client.version>
+        <wiremock-jre8.version>2.27.0</wiremock-jre8.version>
+    </properties>
 
-  <dependencyManagement>
-    <dependencies>
-      <!-- The Quarkus BOM-->
-      <dependency>
-        <groupId>${quarkus.platform.group-id}</groupId>
-        <artifactId>${quarkus.platform.artifact-id}</artifactId>
-        <version>${quarkus.platform.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-  <dependencies>
-    <!-- Quarkus REST libraries-->
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-rest-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-jsonb</artifactId>
-    </dependency>
-    <!-- Quarkus persistence-->
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-hibernate-orm-panache</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-jdbc-postgresql</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-agroal</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-flyway</artifactId>
-    </dependency>
-    <!-- Messaging-->
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-reactive-messaging-kafka</artifactId>
-    </dependency>
-
-    <!-- debezium -->
-    <dependency>
-      <groupId>io.debezium</groupId>
-      <artifactId>debezium-quarkus-outbox</artifactId>
-      <version>${version.debezium-quarkus}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>${gson.version}</version>
-    </dependency>
-
-    <!-- kotlin -->
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-kotlin</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-stdlib-jdk8</artifactId>
-    </dependency>
-    <!-- validation -->
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-hibernate-validator</artifactId>
-    </dependency>
-    <!-- logging -->
-    <dependency>
-      <groupId>io.github.microutils</groupId>
-      <artifactId>kotlin-logging</artifactId>
-      <version>${kotlin.logging.version}</version>
-    </dependency>
-
-    <!-- use this if you require logs in json format-->
-    <!--    <dependency>-->
-    <!--      <groupId>io.quarkus</groupId>-->
-    <!--      <artifactId>quarkus-logging-json</artifactId>-->
-    <!--    </dependency>-->
-
-    <!-- health checks-->
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-health</artifactId>
-    </dependency>
-
-    <!-- security-->
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-oidc</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.nimbusds</groupId>
-      <artifactId>nimbus-jose-jwt</artifactId>
-      <version>8.20</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- SMS providers-->
-    <dependency>
-      <groupId>com.twilio.sdk</groupId>
-      <artifactId>twilio</artifactId>
-      <version>7.12.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.clicksend</groupId>
-      <artifactId>clicksend-java-client</artifactId>
-      <version>1.0.0</version>
-      <scope>compile</scope>
-    </dependency>
-
-
-    <!-- OpenAPI-->
-    <dependency>
-      <groupId>com.porterhead.openapi</groupId>
-      <artifactId>sms-openapi</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <!-- Test libraries -->
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-test-h2</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.rest-assured</groupId>
-      <artifactId>kotlin-extensions</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5-mockito</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.nhaarman</groupId>
-      <artifactId>mockito-kotlin</artifactId>
-      <version>${mockito.kotlin.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-jdbc-h2</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.mockk</groupId>
-      <artifactId>mockk</artifactId>
-      <version>${mockk.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.github.tomakehurst</groupId>
-      <artifactId>wiremock-jre8</artifactId>
-      <version>2.27.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.awaitility</groupId>
-      <artifactId>awaitility</artifactId>
-      <version>4.0.2</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-  <build>
-    <sourceDirectory>src/main/kotlin</sourceDirectory>
-    <testSourceDirectory>src/test/kotlin</testSourceDirectory>
-    <plugins>
-      <plugin>
-        <groupId>io.quarkus</groupId>
-        <artifactId>quarkus-maven-plugin</artifactId>
-        <version>${quarkus-plugin.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>build</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${compiler-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${surefire-plugin.version}</version>
-        <configuration>
-          <systemPropertyVariables>
-            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-          </systemPropertyVariables>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>kotlin-maven-plugin</artifactId>
-        <version>${kotlin.version}</version>
-        <executions>
-          <execution>
-            <id>compile</id>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>test-compile</id>
-            <goals>
-              <goal>test-compile</goal>
-            </goals>
-          </execution>
-        </executions>
+    <dependencyManagement>
         <dependencies>
-          <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-maven-allopen</artifactId>
-            <version>${kotlin.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-maven-noarg</artifactId>
-            <version>${kotlin.version}</version>
-          </dependency>
+            <!-- The Quarkus BOM-->
+            <dependency>
+                <groupId>${quarkus.platform.group-id}</groupId>
+                <artifactId>${quarkus.platform.artifact-id}</artifactId>
+                <version>${quarkus.platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
-        <configuration>
-          <javaParameters>true</javaParameters>
-          <jvmTarget>11</jvmTarget>
-          <compilerPlugins>
-            <plugin>jpa</plugin>
-            <plugin>all-open</plugin>
-          </compilerPlugins>
-          <pluginOptions>
-            <option>all-open:annotation=javax.ws.rs.Path</option>
-            <option>all-open:annotation=javax.enterprise.context.ApplicationScoped</option>
-            <option>all-open:annotation=io.quarkus.test.junit.QuarkusTest</option>
-          </pluginOptions>
-        </configuration>
-      </plugin>
+    </dependencyManagement>
+    <dependencies>
+        <!-- Quarkus REST libraries-->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-resteasy</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-rest-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-resteasy-jsonb</artifactId>
+        </dependency>
+        <!-- Quarkus persistence-->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-hibernate-orm-panache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-jdbc-postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-agroal</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-flyway</artifactId>
+        </dependency>
+        <!-- Messaging-->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-smallrye-reactive-messaging-kafka</artifactId>
+        </dependency>
 
-      <!-- exec plugin to build the image-->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
-        <executions>
-          <!-- Remove existing image from local repo -->
-          <execution>
-            <id>docker-clean</id>
-            <phase>install</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>docker</executable>
-              <workingDirectory>${project.basedir}</workingDirectory>
-              <successCodes>
-                <!-- ignore failure if the image is not found-->
-                <code>1</code>
-                <code>0</code>
-              </successCodes>
-              <arguments>
-                <argument>rmi</argument>
-                <argument>porterhead/sms-service</argument>
-                <argument>porterhead/wiremock</argument>
-              </arguments>
-            </configuration>
-          </execution>
-          <!-- Create new docker image -->
-          <execution>
-            <id>docker-build-service</id>
-            <phase>install</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>docker</executable>
-              <workingDirectory>${project.basedir}</workingDirectory>
-              <arguments>
-                <argument>build</argument>
-                <argument>-f</argument>
-                <argument>Dockerfile.jvm</argument>
-<!--                <argument>Dockerfile.native</argument>-->
-                <argument>-t</argument>
-                <argument>porterhead/sms-service</argument>
-                <argument>.</argument>
-              </arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>docker-build-wiremock</id>
-            <phase>install</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>docker</executable>
-              <workingDirectory>${project.parent.basedir}/wiremock</workingDirectory>
-              <arguments>
-                <argument>build</argument>
-                <argument>-f</argument>
-                <argument>Dockerfile</argument>
-                <argument>-t</argument>
-                <argument>porterhead/wiremock</argument>
-                <argument>.</argument>
-              </arguments>
-            </configuration>
-          </execution>
+        <!-- debezium -->
+        <dependency>
+            <groupId>io.debezium</groupId>
+            <artifactId>debezium-quarkus-outbox</artifactId>
+            <version>${version.debezium-quarkus}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
 
-          <!-- Login and Push the image to a docker repo. -->
-<!--          <execution>-->
-<!--            <id>docker-login</id>-->
-<!--            <phase>deploy</phase>-->
-<!--            <goals>-->
-<!--              <goal>exec</goal>-->
-<!--            </goals>-->
-<!--            <configuration>-->
-<!--              <executable>docker</executable>-->
-<!--              <workingDirectory>${project.basedir}</workingDirectory>-->
-<!--              <arguments>-->
-<!--                <argument>login</argument>-->
-<!--                <argument>-u</argument>-->
-<!--                <argument>${docker.user}</argument>-->
-<!--                <argument>-p</argument>-->
-<!--                <argument>${docker.password}</argument>-->
-<!--                <argument>${docker.url}</argument>-->
-<!--              </arguments>-->
-<!--            </configuration>-->
-<!--          </execution>-->
-<!--          <execution>-->
-<!--            <id>docker-push</id>-->
-<!--            <phase>deploy</phase>-->
-<!--            <goals>-->
-<!--              <goal>exec</goal>-->
-<!--            </goals>-->
-<!--            <configuration>-->
-<!--              <executable>docker</executable>-->
-<!--              <workingDirectory>${project.basedir}</workingDirectory>-->
-<!--              <arguments>-->
-<!--                <argument>push</argument>-->
-<!--                <argument>porterhead/sms-service</argument>-->
-<!--              </arguments>-->
-<!--            </configuration>-->
-<!--          </execution>-->
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-  <profiles>
-    <profile>
-      <id>native</id>
-      <activation>
-        <property>
-          <name>native</name>
-        </property>
-      </activation>
-      <build>
+        <!-- kotlin -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-kotlin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+        </dependency>
+        <!-- validation -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-hibernate-validator</artifactId>
+        </dependency>
+        <!-- logging -->
+        <dependency>
+            <groupId>io.github.microutils</groupId>
+            <artifactId>kotlin-logging</artifactId>
+            <version>${kotlin.logging.version}</version>
+        </dependency>
+
+        <!-- use this if you require logs in json format-->
+        <!--    <dependency>-->
+        <!--      <groupId>io.quarkus</groupId>-->
+        <!--      <artifactId>quarkus-logging-json</artifactId>-->
+        <!--    </dependency>-->
+
+        <!-- health checks-->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-smallrye-health</artifactId>
+        </dependency>
+
+        <!-- security-->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-oidc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>${nimbus-jose-jwt.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- SMS providers-->
+        <dependency>
+            <groupId>com.twilio.sdk</groupId>
+            <artifactId>twilio</artifactId>
+            <version>${twilio.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.clicksend</groupId>
+            <artifactId>clicksend-java-client</artifactId>
+            <version>${clicksend-java-client.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+
+        <!-- OpenAPI-->
+        <dependency>
+            <groupId>com.porterhead.openapi</groupId>
+            <artifactId>sms-openapi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Test libraries -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-test-h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>kotlin-extensions</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-junit5-mockito</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.nhaarman</groupId>
+            <artifactId>mockito-kotlin</artifactId>
+            <version>${mockito.kotlin.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.mockk</groupId>
+            <artifactId>mockk</artifactId>
+            <version>${mockk.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock-jre8</artifactId>
+            <version>${wiremock-jre8.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>kafka</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>4.0.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <sourceDirectory>src/main/kotlin</sourceDirectory>
+        <testSourceDirectory>src/test/kotlin</testSourceDirectory>
         <plugins>
-          <plugin>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <version>3.0.0-M3</version>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>integration-test</goal>
-                  <goal>verify</goal>
-                </goals>
+            <plugin>
+                <groupId>io.quarkus</groupId>
+                <artifactId>quarkus-maven-plugin</artifactId>
+                <version>${quarkus-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire-plugin.version}</version>
                 <configuration>
-                  <systemPropertyVariables>
-                    <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
-                  </systemPropertyVariables>
+                    <systemPropertyVariables>
+                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                    </systemPropertyVariables>
                 </configuration>
-              </execution>
-            </executions>
-          </plugin>
+            </plugin>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-allopen</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-noarg</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <javaParameters>true</javaParameters>
+                    <jvmTarget>11</jvmTarget>
+                    <compilerPlugins>
+                        <plugin>jpa</plugin>
+                        <plugin>all-open</plugin>
+                    </compilerPlugins>
+                    <pluginOptions>
+                        <option>all-open:annotation=javax.ws.rs.Path</option>
+                        <option>all-open:annotation=javax.enterprise.context.ApplicationScoped</option>
+                        <option>all-open:annotation=io.quarkus.test.junit.QuarkusTest</option>
+                    </pluginOptions>
+                </configuration>
+            </plugin>
+
+            <!-- exec plugin to build the image-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <!-- Remove existing image from local repo -->
+                    <execution>
+                        <id>docker-clean</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>docker</executable>
+                            <workingDirectory>${project.basedir}</workingDirectory>
+                            <successCodes>
+                                <!-- ignore failure if the image is not found-->
+                                <code>1</code>
+                                <code>0</code>
+                            </successCodes>
+                            <arguments>
+                                <argument>rmi</argument>
+                                <argument>porterhead/sms-service</argument>
+                                <argument>porterhead/wiremock</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>docker-build-wiremock</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>docker</executable>
+                            <workingDirectory>${project.parent.basedir}/wiremock</workingDirectory>
+                            <arguments>
+                                <argument>build</argument>
+                                <argument>-f</argument>
+                                <argument>Dockerfile</argument>
+                                <argument>-t</argument>
+                                <argument>porterhead/wiremock</argument>
+                                <argument>.</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+
+                    <!-- Login and Push the image to a docker repo. -->
+                    <!--          <execution>-->
+                    <!--            <id>docker-login</id>-->
+                    <!--            <phase>deploy</phase>-->
+                    <!--            <goals>-->
+                    <!--              <goal>exec</goal>-->
+                    <!--            </goals>-->
+                    <!--            <configuration>-->
+                    <!--              <executable>docker</executable>-->
+                    <!--              <workingDirectory>${project.basedir}</workingDirectory>-->
+                    <!--              <arguments>-->
+                    <!--                <argument>login</argument>-->
+                    <!--                <argument>-u</argument>-->
+                    <!--                <argument>${docker.user}</argument>-->
+                    <!--                <argument>-p</argument>-->
+                    <!--                <argument>${docker.password}</argument>-->
+                    <!--                <argument>${docker.url}</argument>-->
+                    <!--              </arguments>-->
+                    <!--            </configuration>-->
+                    <!--          </execution>-->
+                    <!--          <execution>-->
+                    <!--            <id>docker-push</id>-->
+                    <!--            <phase>deploy</phase>-->
+                    <!--            <goals>-->
+                    <!--              <goal>exec</goal>-->
+                    <!--            </goals>-->
+                    <!--            <configuration>-->
+                    <!--              <executable>docker</executable>-->
+                    <!--              <workingDirectory>${project.basedir}</workingDirectory>-->
+                    <!--              <arguments>-->
+                    <!--                <argument>push</argument>-->
+                    <!--                <argument>porterhead/sms-service</argument>-->
+                    <!--              </arguments>-->
+                    <!--            </configuration>-->
+                    <!--          </execution>-->
+                </executions>
+            </plugin>
         </plugins>
-      </build>
-      <properties>
-        <quarkus.package.type>native</quarkus.package.type>
-      </properties>
-    </profile>
-  </profiles>
+    </build>
+    <profiles>
+        <profile>
+            <id>jvm</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <executions>
+                            <!-- Create new docker image -->
+                            <execution>
+                                <id>docker-build-service</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>docker</executable>
+                                    <workingDirectory>${project.basedir}</workingDirectory>
+                                    <arguments>
+                                        <argument>build</argument>
+                                        <argument>-f</argument>
+                                        <argument>Dockerfile.jvm</argument>
+                                        <argument>-t</argument>
+                                        <argument>porterhead/sms-service</argument>
+                                        <argument>.</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>native</id>
+            <activation>
+                <property>
+                    <name>native</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>3.0.0-M3</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                                <configuration>
+                                    <systemPropertyVariables>
+                                        <native.image.path>
+                                            ${project.build.directory}/${project.build.finalName}-runner
+                                        </native.image.path>
+                                    </systemPropertyVariables>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <executions>
+                            <!-- Create new docker image -->
+                            <execution>
+                                <id>docker-build-service</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>docker</executable>
+                                    <workingDirectory>${project.basedir}</workingDirectory>
+                                    <arguments>
+                                        <argument>build</argument>
+                                        <argument>-f</argument>
+                                        <!-- build the image with the native executable
+                                             use mvn install -Pnative to build-->
+                                        <argument>Dockerfile.native</argument>
+                                        <argument>-t</argument>
+                                        <argument>porterhead/sms-service</argument>
+                                        <argument>.</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <properties>
+                <quarkus.package.type>native</quarkus.package.type>
+            </properties>
+        </profile>
+    </profiles>
 </project>

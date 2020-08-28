@@ -11,6 +11,7 @@ import mu.KotlinLogging
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.eclipse.microprofile.rest.client.inject.RestClient
 import java.util.*
+import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.ProcessingException
 import javax.ws.rs.WebApplicationException
@@ -27,8 +28,12 @@ class ClickSendProvider(@RestClient var clickSendRestClient: ClickSendRestClient
     @ConfigProperty(name = "sms.provider.clicksend.apiKey")
     var apiKey: String? = null
 
-    var apiCreds: String = Base64.getEncoder().encodeToString("$username:$apiKey".toByteArray())
+    lateinit var apiCreds: String
 
+    @PostConstruct
+    fun init() {
+        apiCreds = Base64.getEncoder().encodeToString("$username:$apiKey".toByteArray())
+    }
 
     val gson: Gson = GsonBuilder().create()
 
@@ -81,19 +86,6 @@ class ClickSendProvider(@RestClient var clickSendRestClient: ClickSendRestClient
                 .getAsJsonArray("messages")[0] as JsonObject)
                 .getAsJsonPrimitive("status").asString
     }
-
-//    private fun postToApi(smsMessages: SmsMessageCollection): Response {
-//        val bodyAsJson = gson.toJson(smsMessages)
-//        log.debug { "serialised messages to json: $bodyAsJson" }
-//        return httpPost(client) {
-//            url(URL(endpoint))
-//            header { "Authorization" to "Basic $apiCreds" }
-//            header { "Content-Type" to "application/json" }
-//            body("application/json") {
-//                json(bodyAsJson)
-//            }
-//        }
-//    }
 
     override fun toString(): String {
         return "ClickSendProvider(username=$username)"

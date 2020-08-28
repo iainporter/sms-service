@@ -15,29 +15,45 @@ import com.nimbusds.jwt.SignedJWT
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager
 import io.restassured.RestAssured
 import io.restassured.response.ResponseBody
+import org.testcontainers.containers.KafkaContainer
+import org.testcontainers.containers.PostgreSQLContainer
 import java.lang.reflect.Field
 import java.util.*
 
-open class WiremockTestResource : QuarkusTestResourceLifecycleManager {
+open class SmsServiceTestResource : QuarkusTestResourceLifecycleManager {
 
     lateinit var wireMockServer: WireMockServer
     lateinit var keyPair: RSAKey
+    private val kafka: KafkaContainer = KafkaContainer()
+    var postgresContainer: PostgreSQLContainer<*> = KPostgreSQLContainer("debezium/postgres:11")
+            .withNetworkAliases("postgres-db")
+            .withUsername("postgres")
+            .withPassword("postgres")
+            .withDatabaseName("sms")
+
+    class KPostgreSQLContainer(imageName: String) : PostgreSQLContainer<KPostgreSQLContainer>(imageName)
 
     override fun start(): MutableMap<String, String> {
         wireMockServer = WireMockServer(WireMockConfiguration().dynamicPort())
         wireMockServer.start()
+        kafka.start()
+        postgresContainer.start()
         keyPair = generatePrivateKey()
         postStubMapping(oidcConfigurationStub())
         postStubMapping(publicKeysStub(keyPair.toPublicJWK().toJSONString()))
         return mapOf("quarkus.oidc.auth-server-url" to wireMockServer.baseUrl() + "/mock-server",
-                    "wiremock.url" to wireMockServer.baseUrl()).toMutableMap()
+                "wiremock.url" to wireMockServer.baseUrl(),
+                "kafka.bootstrap.servers" to kafka.bootstrapServers,
+                "quarkus.datasource.jdbc.url" to postgresContainer.getJdbcUrl(),
+                "quarkus.datasource.username" to "postgres",
+                "quarkus.datasource.password" to "postgres").toMutableMap()
     }
 
     /**
      * Generate a key pair for signing and verifying JWTs
      */
-    fun generatePrivateKey() :RSAKey {
-        return  RSAKeyGenerator(2048)
+    fun generatePrivateKey(): RSAKey {
+        return RSAKeyGenerator(2048)
                 .keyID("123").keyUse(KeyUse.SIGNATURE)
                 .generate()
     }
@@ -63,6 +79,8 @@ open class WiremockTestResource : QuarkusTestResourceLifecycleManager {
 
     override fun stop() {
         wireMockServer.stop()
+        kafka.stop()
+        postgresContainer.stop()
     }
 
 

@@ -6,7 +6,7 @@ import com.porterhead.api.sms.Message
 import com.porterhead.api.sms.PagedMessageResponse
 import com.porterhead.api.sms.PagedMessageResponsePage
 import com.porterhead.sms.SmsService
-import com.porterhead.sms.WiremockTestResource
+import com.porterhead.sms.SmsServiceTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.mockito.InjectMock
 import io.restassured.RestAssured
@@ -21,7 +21,7 @@ import java.util.*
 import javax.ws.rs.core.Response
 
 @QuarkusTest
-class GetMessagesResourceTest : WiremockTestResource(){
+class GetMessagesResourceTest : SmsServiceTestResource(){
 
     @InjectMock
     lateinit var smsService: SmsService

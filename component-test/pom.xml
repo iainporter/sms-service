@@ -13,7 +13,6 @@
     <packaging>jar</packaging>
 
     <properties>
-        <testcontainers.version>1.14.3</testcontainers.version>
         <test.containers.debezium.version>1.2.1.Final</test.containers.debezium.version>
         <test.containers.kafka.version>1.8.2</test.containers.kafka.version>
         <test.containers.postgres.version>1.14.3</test.containers.postgres.version>

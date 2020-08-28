@@ -2,11 +2,9 @@ package com.porterhead.sms.provider
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
-import com.porterhead.sms.WiremockTestResource
+import com.porterhead.sms.SmsServiceTestResource
 import com.porterhead.sms.domain.SmsMessage
 import com.porterhead.sms.provider.clicksend.ClickSendData
-import com.porterhead.sms.provider.clicksend.ClickSendProvider
-import com.porterhead.sms.provider.clicksend.ClickSendRestClient
 import com.porterhead.sms.provider.twilio.TwilioData
 import com.porterhead.sms.provider.twilio.TwilioProvider
 import com.porterhead.sms.resource.GetSmsMessageResourceTest
@@ -17,7 +15,7 @@ import javax.inject.Inject
 import javax.transaction.Transactional
 
 @QuarkusTest
-@QuarkusTestResource(WiremockTestResource::class)
+@QuarkusTestResource(SmsServiceTestResource::class)
 @Transactional
 class RandomProviderRouterTest {
 

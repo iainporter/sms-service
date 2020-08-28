@@ -3,7 +3,7 @@ package com.porterhead.sms.resource
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import com.porterhead.sms.SmsService
-import com.porterhead.sms.WiremockTestResource
+import com.porterhead.sms.SmsServiceTestResource
 import com.porterhead.sms.domain.SmsMessage
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.mockito.InjectMock
@@ -16,7 +16,7 @@ import javax.ws.rs.NotFoundException
 import javax.ws.rs.core.Response
 
 @QuarkusTest
-class GetSmsMessageResourceTest : WiremockTestResource(){
+class GetSmsMessageResourceTest : SmsServiceTestResource(){
 
     companion object {
         val id: UUID = UUID.fromString("47b56dd0-73d4-485e-b5e7-0489865973a1")

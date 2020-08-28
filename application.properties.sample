@@ -16,5 +16,6 @@ sms.provider.twilio.endpoint=https://api.twilio.com/2010-04-01/Accounts/<your ac
 sms.provider.twilio.auth.token=
 sms.provider.twilio.from.number=
 
+# Sign up to Okta or other provider to get the server url
 quarkus.oidc.auth-server-url=
 quarkus.oidc.client-id=

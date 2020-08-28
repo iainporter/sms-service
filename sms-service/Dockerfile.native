@@ -7,18 +7,22 @@
 #
 # Then, build the image with:
 #
-# docker build -f src/main/docker/Dockerfile.native -t quarkus/code-with-quarkus .
+# docker build -f src/main/docker/Dockerfile.native -t porterhead/sms-service .
 #
 # Then run the container using:
 #
-# docker run -i --rm -p 8080:8080 quarkus/code-with-quarkus
+# docker run -i --rm -p 8080:8080 porterhead/sms-service
 #
 ###
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1
-WORKDIR /work/
-COPY --chown=1001:root target/*-runner /work/application
+WORKDIR /deployments/
+COPY --chown=1001:root target/*-runner /deployments/application
 
+## add wait utility to wait for postgres to start using WAIT_HOSTS: postgres-db:5432
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.2.1/wait /wait
+RUN chmod +x /wait
 EXPOSE 8080
 USER 1001
+CMD /wait && ./application -Dquarkus.http.host=0.0.0.0
 
-CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
+

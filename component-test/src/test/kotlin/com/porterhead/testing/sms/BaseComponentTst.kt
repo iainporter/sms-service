@@ -129,27 +129,8 @@ abstract class BaseComponentTst {
 
     }
 
-
     class KPostgreSQLContainer(imageName: String) : PostgreSQLContainer<KPostgreSQLContainer>(imageName)
 
     class KGenericContainer(imageName: String) : GenericContainer<KGenericContainer>(imageName)
 
-//  Uncomment to use docker-compose file instead of code above
-    // could not get it to work as the 8083 port in kafka connect could not be reached for unknown reason
-//    companion object {
-//
-//        val env: KDockerComposeContainer by lazy {initDockerCompose()}
-//        class KDockerComposeContainer(path: File) : DockerComposeContainer<KDockerComposeContainer>(path)
-//
-//        private fun initDockerCompose() = KDockerComposeContainer(File("src/test/resources/docker-compose.yml"))
-//                .withExposedService("sms-service_1", 8080)
-//                .withExposedService("postgres-db_1", 5432)
-//                .withExposedService("kafka_1", 9092)
-////                .withExposedService("kafka-connect_1", 8083)
-//                .waitingFor("sms-service", Wait.forHttp("/health"))
-//
-//        init {
-//            env.start()
-//        }
-//    }
 }

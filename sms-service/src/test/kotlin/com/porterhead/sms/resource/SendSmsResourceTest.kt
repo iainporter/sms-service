@@ -1,29 +1,23 @@
 package com.porterhead.sms.resource
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.whenever
-import com.porterhead.sms.SmsService
-import com.porterhead.sms.WiremockTestResource
+import com.porterhead.sms.SmsServiceTestResource
 import com.porterhead.sms.domain.SmsMessage
 import io.quarkus.test.junit.QuarkusTest
-import io.quarkus.test.junit.mockito.InjectMock
 import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import javax.ws.rs.core.Response
 
 @QuarkusTest
-class SendSmsResourceTest : WiremockTestResource(){
-
-    @InjectMock
-    lateinit var smsService: SmsService
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class SendSmsResourceTest : SmsServiceTestResource(){
 
     @Test
     @DisplayName("POST /v1/sms with valid request returns 202")
     fun testSuccessfulSend() {
-        whenever(smsService.createMessage(any(), any())).thenReturn(testDouble())
         given()
                 .`when`()
                 .contentType(ContentType.JSON)
