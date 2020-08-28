@@ -122,3 +122,13 @@ you should see a response similar to this
 "updatedAt":"2020-07-16T16:44:00.432926Z"
 }
 ```
+
+# Running as a native executable on GraalVM
+
+To build the native image you must have the native-image tool for GraalVM installed.
+
+To build it 
+
+```
+mvn clean install -Pnative
+```
