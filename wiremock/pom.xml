@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.porterhead</groupId>
+    <artifactId>sms-service-parent</artifactId>
+    <version>1.0.5</version>
+  </parent>
+  <artifactId>wiremock</artifactId>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-universe-bom</artifactId>
+        <version>${quarkus.platform.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-container-image-docker</artifactId>
+      <version>${quarkus.platform.version}</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-maven-plugin</artifactId>
+        <version>${quarkus-plugin.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>build</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

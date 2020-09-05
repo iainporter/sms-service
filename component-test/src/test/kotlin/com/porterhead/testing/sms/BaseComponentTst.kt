@@ -16,26 +16,26 @@ import java.util.stream.Stream
 abstract class BaseComponentTst {
 
     companion object {
-        val network: Network = Network.newNetwork()
+        private val network: Network = Network.newNetwork()
 
-        val kafkaContainer = KafkaContainer()
+        private val kafkaContainer: KafkaContainer = KafkaContainer()
                 .withNetwork(network)
                 .withNetworkAliases("kafka")
 
-        var postgresContainer: PostgreSQLContainer<*> = KPostgreSQLContainer("debezium/postgres:11")
+        private var postgresContainer: PostgreSQLContainer<*> = KPostgreSQLContainer("debezium/postgres:11")
                 .withNetwork(network)
                 .withNetworkAliases("postgres-db")
                 .withUsername("postgres")
                 .withPassword("postgres")
                 .withDatabaseName("sms")
 
-        var debeziumContainer = DebeziumContainer("debezium/connect:1.2.1.Final")
+        private var debeziumContainer: DebeziumContainer = DebeziumContainer("debezium/connect:1.2.1.Final")
                 .withNetwork(network)
                 .withExposedPorts(8083)
                 .withKafka(kafkaContainer)
                 .dependsOn(kafkaContainer)
 
-        var keycloakContainer = KGenericContainer("quay.io/keycloak/keycloak:11.0.0")
+        private var keycloakContainer: KGenericContainer = KGenericContainer("quay.io/keycloak/keycloak:11.0.2")
                 .withNetwork(network)
                 .withNetworkAliases("keycloak")
                 .withExposedPorts(8080)
@@ -46,18 +46,18 @@ abstract class BaseComponentTst {
                 .withClasspathResourceMapping("config/porterhead-realm.json", "/tmp/realm.json", BindMode.READ_ONLY)
                 .waitingFor(Wait.forHttp("/auth"))
 
-        var smsServiceContainer = KGenericContainer("porterhead/sms-service")
+        private var smsServiceContainer: KGenericContainer = KGenericContainer("iainporter/sms-service:1.0.5")
                 .withNetwork(network)
                 .withNetworkAliases("sms-service")
                 .withExposedPorts(8080)
                 .withEnv("quarkus.datasource.username", "postgres")
                 .withEnv("quarkus.datasource.password", "postgres")
                 .withEnv("quarkus.datasource.jdbc.url", "jdbc:postgresql://postgres-db:5432/sms")
-                .withCopyFileToContainer(MountableFile.forClasspathResource("/config/application.properties"), "/deployments/config/application.properties")
+                .withCopyFileToContainer(MountableFile.forClasspathResource("/config/application.properties"), "config/application.properties")
                 .dependsOn(postgresContainer)
                 .dependsOn(keycloakContainer)
 
-        var mockServerContainer = KGenericContainer("porterhead/wiremock")
+        private var mockServerContainer: KGenericContainer = KGenericContainer("iainporter/wiremock:1.0.5")
                 .withNetwork(network)
                 .withNetworkAliases("wiremock")
                 .withExposedPorts(8080)

@@ -1,7 +1,7 @@
 version: '3'
 services:
   postgres-db:
-    image: debezium/postgres
+    image: debezium/postgres:11
     ports:
       - 5432:5432
     environment:
@@ -9,7 +9,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=sms
   sms-service:
-    image: porterhead/sms-service
+    image: iainporter/sms-service:1.0.5
     ports:
       - 8080:8080
       - 5005:5005
@@ -20,7 +20,7 @@ services:
       quarkus.datasource.password: postgres
       quarkus.datasource.jdbc.url: jdbc:postgresql://postgres-db:5432/sms
     volumes:
-      - ../config/application.properties:/deployments/config/application.properties
+      - ../../config/application.properties:/config/application.properties
     depends_on:
       - postgres-db
   zookeeper:

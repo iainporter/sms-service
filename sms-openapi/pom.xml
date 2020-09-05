@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.porterhead</groupId>
         <artifactId>sms-service-parent</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
     </parent>
 
         <groupId>com.porterhead.openapi</groupId>

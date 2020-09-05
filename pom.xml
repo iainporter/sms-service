@@ -5,7 +5,7 @@
 
     <groupId>com.porterhead</groupId>
     <artifactId>sms-service-parent</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <packaging>pom</packaging>
 
     <name>sms-service-parent</name>
@@ -32,6 +32,8 @@
     <modules>
         <!-- The API used by the service-->
         <module>sms-openapi</module>
+        <!-- build wiremock container for component tests -->
+        <module>wiremock</module>
         <!-- The micro service-->
         <module>sms-service</module>
         <!-- Use docker to test the service with all the dependencies-->
