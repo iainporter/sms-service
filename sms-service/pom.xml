@@ -267,12 +267,6 @@
   </build>
   <profiles>
     <profile>
-      <id>jvm</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-    </profile>
-    <profile>
       <id>native</id>
       <activation>
         <property>
