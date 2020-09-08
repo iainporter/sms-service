@@ -7,6 +7,7 @@ See accompanying blog posts
 * [Part Three - Building a resilient microservice with quarkus and wiremock](https://levelup.gitconnected.com/building-a-resilient-microservice-with-quarkus-and-wiremock-de59b2a4fac7)
 * [Part Four - Securing a microservice in quarkus with openid-connect](https://levelup.gitconnected.com/securing-a-microservice-in-quarkus-with-openid-connect-505204d1c9a9)
 * [Part Five - Running a microservice in quarkus on graalvm](https://medium.com/@changeant/running-a-microservice-in-quarkus-on-graalvm-52d6b42a5840)
+* [Containerizing your microservice in quarkus with jib](https://medium.com/@changeant/containerizing-your-microservice-in-quarkus-with-jib-fae0f62bd57e)
 
 A production quality micro service for sending SMS messages that demonstrates the use of several technologies including:
 
