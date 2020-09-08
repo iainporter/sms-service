@@ -1,6 +1,5 @@
 package com.porterhead.testing.sms
 
-import com.porterhead.testing.RestFunctions
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test

@@ -16,6 +16,9 @@ import java.util.stream.Stream
 abstract class BaseComponentTst {
 
     companion object {
+
+        private val configPath: String = if(System.getProperty("profile") == "native")  "/work/config/application.properties" else "config/application.properties"
+
         private val network: Network = Network.newNetwork()
 
         private val kafkaContainer: KafkaContainer = KafkaContainer()
@@ -53,7 +56,8 @@ abstract class BaseComponentTst {
                 .withEnv("quarkus.datasource.username", "postgres")
                 .withEnv("quarkus.datasource.password", "postgres")
                 .withEnv("quarkus.datasource.jdbc.url", "jdbc:postgresql://postgres-db:5432/sms")
-                .withCopyFileToContainer(MountableFile.forClasspathResource("/config/application.properties"), "config/application.properties")
+                .withCopyFileToContainer(MountableFile.forClasspathResource("/config/application.properties"), "config/application.properties") //non-native build
+                .withCopyFileToContainer(MountableFile.forClasspathResource("/config/application.properties"), "/work/config/application.properties") //native build
                 .dependsOn(postgresContainer)
                 .dependsOn(keycloakContainer)
 
