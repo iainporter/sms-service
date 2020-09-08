@@ -35,7 +35,7 @@ You can build the service, but it won't accept messages unless there is at least
 
 ## The architecture
 
-[Arch diagram](https://github.com/iainporter/sms-service/blob/master/images/sms_service.png?raw=true)
+![Arch diagram](https://github.com/iainporter/sms-service/blob/master/images/sms_service.png?raw=true)
 
 # Configuring the Service
 To configure the service, sign up to Twilio and/or ClickSend and add the appropriate properties
