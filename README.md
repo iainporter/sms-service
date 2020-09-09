@@ -67,13 +67,6 @@ Build the service
 ```
  mvn install
  ```
- 
-To build the docker container (not needed if you run mvn install)
-
-```
-docker build -f sms-service/Dockerfile.jvm -t porterhead/sms-service .
-```
-
 
 docker-compose to bring the service up
 
