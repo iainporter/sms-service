@@ -13,24 +13,24 @@ jobs:
       # ########################
       - checkout
 
-      # Restore any files we may have cached
-      # ########################
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "pom.xml" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      # Download maven dependencies so that we can cache them
-      # ########################
-      - run:
-          name: Download Dependencies
-          command: mvn dependency:go-offline
-      # Cache the maven dependencies
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: v1-dependencies-{{ checksum "pom.xml" }}
+#      # Restore any files we may have cached
+#      # ########################
+#      - restore_cache:
+#          keys:
+#            - v1-dependencies-{{ checksum "pom.xml" }}
+#            # fallback to using the latest cache if no exact match is found
+#            - v1-dependencies-
+#
+#      # Download maven dependencies so that we can cache them
+#      # ########################
+#      - run:
+#          name: Download Dependencies
+#          command: mvn dependency:go-offline
+#      # Cache the maven dependencies
+#      - save_cache:
+#          paths:
+#            - ~/.m2
+#          key: v1-dependencies-{{ checksum "pom.xml" }}
 
       # Standard maven build and test phases - does not perform a native build (or verify)
       # ########################
