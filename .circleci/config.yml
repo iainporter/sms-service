@@ -13,6 +13,9 @@ jobs:
       # ########################
       - checkout
 
+      - setup_remote_docker:
+          docker_layer_caching: true
+
 #      # Restore any files we may have cached
 #      # ########################
 #      - restore_cache:
