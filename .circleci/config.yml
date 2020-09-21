@@ -3,18 +3,17 @@ jobs:
   build:
     docker:
       - image: circleci/openjdk:11-jdk
-        
+
     # Uses a "medium" sized machine - maybe increase this to "large" if you pay for CircleCI
     resource_class: medium
     working_directory: ~/repo
     environment:
       MAVEN_OPTS: -Xmx6400m
+    machine: true
     steps:
       # Checkout the source code
       # ########################
       - checkout
-
-      - setup_remote_docker
 
 #      # Restore any files we may have cached
 #      # ########################
