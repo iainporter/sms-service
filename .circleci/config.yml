@@ -36,7 +36,7 @@ jobs:
       # ########################
       - run:
           name: Build (Standard)
-          command: ./mvnw clean package -DskipTests -Dmaven.test.skip=true
+          command: ./mvnw clean install -DskipTests -Dmaven.test.skip=true
       - run:
           name: Verify (Standard)
           command: ./mvnw test
