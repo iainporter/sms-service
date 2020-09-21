@@ -9,7 +9,7 @@ jobs:
     working_directory: ~/repo
     environment:
       MAVEN_OPTS: -Xmx6400m
-    machine: true
+    machine:
       image: ubuntu-2004:202008-01
     steps:
       # Checkout the source code
