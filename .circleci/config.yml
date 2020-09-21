@@ -1,8 +1,8 @@
 version: 2
 jobs:
   build:
-    # Use "machine" instead of e.g. "docker" for better/faster results
-    machine: true
+    docker:
+      - image: circleci/openjdk:11-jdk
     # Uses a "medium" sized machine - maybe increase this to "large" if you pay for CircleCI
     resource_class: medium
     working_directory: ~/repo
