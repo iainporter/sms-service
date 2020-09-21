@@ -1,25 +1,42 @@
-version: 2.1
-
-orbs:
-  maven: circleci/maven@0.0.12
-
+version: 2
 jobs:
-  maven/test:
-    docker:
-      - image: circleci/openjdk:11-jdk-node
+  build:
+    # Use "machine" instead of e.g. "docker" for better/faster results
+    machine: true
+    # Uses a "medium" sized machine - maybe increase this to "large" if you pay for CircleCI
+    resource_class: medium
+    working_directory: ~/repo
+    environment:
+      MAVEN_OPTS: -Xmx6400m
     steps:
+      # Checkout the source code
+      # ########################
+      - checkout
+
+      # Restore any files we may have cached
+      # ########################
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pom.xml" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      # Download maven dependencies so that we can cache them
+      # ########################
       - run:
-          name: Install Dependencies
-          dependencies:
-            override:
-              - mvn install -DskipTests
+          name: Download Dependencies
+          command: mvn dependency:go-offline
+      # Cache the maven dependencies
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "pom.xml" }}
+
+      # Standard maven build and test phases - does not perform a native build (or verify)
+      # ########################
       - run:
-          name: Run Tests
-          command: mvn verify
-      - store_test_results:
-          path: target/surefire-reports
-workflows:
-  maven_test:
-    jobs:
-      - maven/test
-  version: 2
+          name: Build (Standard)
+          command: ./mvnw clean package -DskipTests -Dmaven.test.skip=true
+      - run:
+          name: Verify (Standard)
+          command: ./mvnw test
