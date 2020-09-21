@@ -15,6 +15,7 @@ jobs:
       # Checkout the source code
       # ########################
       - checkout
+      - run: docker pull confluentinc/cp-kafka:5.2.1
 
 #      # Restore any files we may have cached
 #      # ########################
