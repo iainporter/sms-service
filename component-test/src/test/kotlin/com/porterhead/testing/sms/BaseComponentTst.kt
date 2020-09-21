@@ -10,6 +10,8 @@ import org.testcontainers.containers.*
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.lifecycle.Startables
 import org.testcontainers.utility.MountableFile
+import java.time.Duration
+import java.time.temporal.TemporalUnit
 import java.util.concurrent.TimeUnit
 import java.util.stream.Stream
 
@@ -47,7 +49,7 @@ abstract class BaseComponentTst {
                 .withEnv("KEYCLOAK_IMPORT", "/tmp/realm.json")
                 .withEnv("JAVA_OPTS", "-Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled")
                 .withClasspathResourceMapping("config/porterhead-realm.json", "/tmp/realm.json", BindMode.READ_ONLY)
-                .waitingFor(Wait.forHttp("/auth"))
+                .waitingFor(Wait.forHttp("/auth").withStartupTimeout(Duration.ofSeconds(120)))
 
         private var smsServiceContainer: KGenericContainer = KGenericContainer("iainporter/sms-service:1.0.5")
                 .withNetwork(network)
