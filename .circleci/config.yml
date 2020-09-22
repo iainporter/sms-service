@@ -75,7 +75,7 @@ jobs:
           name: Build (Native)
           command: |
               if [ "${CIRCLE_BRANCH}" == "circleci" ]; then
-                mvn clean package -Pnative -DskipTests -Dquarkus.native.native-image-xmx=6g
+                mvn clean package -Pnative -DskipTests -Dquarkus.native.native-image-xmx=6g -Dquarkus.container-image.tag=${VERSION}-native
               fi
           no_output_timeout: 30m
       - run:
@@ -90,6 +90,5 @@ jobs:
           name: Docker Push (Native)
           command: |
             if [ "${CIRCLE_BRANCH}" == "circleci" ]; then
-                echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
                 docker push iainporter/sms-service:${VERSION}-native
             fi
