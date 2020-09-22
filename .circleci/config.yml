@@ -69,13 +69,13 @@ jobs:
           name: Build (Native)
           command: |
               if [ "${CIRCLE_BRANCH}" == "circleci" ]; then
-                ./mvnw clean package -Pnative -DskipTests -Dmaven.test.skip=true
+                mvn clean package -Pnative -DskipTests -Dmaven.test.skip=true
               fi
           no_output_timeout: 30m
       - run:
           name: Verify (Native)
           command: |
               if [ "${CIRCLE_BRANCH}" == "circleci" ]; then
-                ./mvnw verify -Pnative
+                mvn verify -Pnative
               fi
           no_output_timeout: 30m
