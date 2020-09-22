@@ -26,7 +26,7 @@ jobs:
       ## Note. we can't just run mvn dependency:go-offline as the jars in the sub modules won't have been built yet
       - run:
           name: Build
-          command: mvn clean install -skipTests
+          command: mvn clean install -DskipTests
 
       ## cache the dependencies
       - save_cache:
