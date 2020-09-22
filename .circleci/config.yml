@@ -16,6 +16,12 @@ jobs:
       ## Checkout the source code
       - checkout
 
+    ## set the version
+      - run:
+          name: Set Version
+          command: |
+                echo 'export VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)'
+
       ## Restore any files that may have been cached from previous jobs
       - restore_cache:
           keys:
@@ -45,7 +51,7 @@ jobs:
           command: |
               if [ "${CIRCLE_BRANCH}" == "circleci" ]; then
                   echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-                  docker push iainporter/sms-service:1.0.5
+                  docker push iainporter/sms-service:${VERSION}
               fi
 
       # Install GraalVM and native-image, needed for a native Quarkus build
@@ -85,5 +91,5 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "circleci" ]; then
                 echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-                docker push iainporter/sms-service:1.0.5-native
+                docker push iainporter/sms-service:${VERSION}-native
             fi
