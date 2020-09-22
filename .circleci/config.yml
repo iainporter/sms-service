@@ -36,8 +36,12 @@ jobs:
       - run:
           name: Test
           command: mvn test
+
+      ## Push docker image if master build
       - run:
           name: Docker_Push
           command: |
-                  echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-                  docker push iainporter/sms-service:1.0.5
+                    if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                       echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+                       docker push iainporter/sms-service:1.0.5
+                    fi
