@@ -37,9 +37,7 @@ jobs:
           name: Test
           command: mvn test
       - run:
-          name: push to docker registry
+          name: Docker_Push
           command: |
-#                    if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                       echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-                       docker push iainporter/sms-service:1.0.5
-#                    fi
+                  echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+                  docker push iainporter/sms-service:1.0.5
