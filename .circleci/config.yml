@@ -20,7 +20,7 @@ jobs:
       - run:
           name: Set Version
           command: |
-                echo 'export VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)'
+                echo 'export VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)' >> $BASH_ENV
 
       ## Restore any files that may have been cached from previous jobs
       - restore_cache:
