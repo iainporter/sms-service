@@ -26,10 +26,13 @@ jobs:
       ## Note. we can't just run mvn dependency:go-offline as the jars in the sub modules won't have been built yet
       - run:
           name: Build
-          command: mvn clean install
+          command: mvn clean install -SkipTests
 
       ## cache the dependencies
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
+      - run:
+          name: Test
+          command: mvn test
