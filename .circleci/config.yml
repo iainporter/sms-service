@@ -70,6 +70,7 @@ jobs:
               fi
 
       # Perform a native Quarkus build and verify
+      # set the max heap size to prevent OOM
       # ########################
       - run:
           name: Build (Native)
