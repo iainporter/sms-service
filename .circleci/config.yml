@@ -76,7 +76,7 @@ jobs:
           name: Build (Native)
           command: |
               if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                mvn clean package -Pnative -DskipTests -Dquarkus.native.native-image-xmx=6g -Dquarkus.container-image.tag=${VERSION}-native
+                mvn clean package -Pnative -DskipTests -Dquarkus.native.native-image-xmx=8g -Dquarkus.container-image.tag=${VERSION}-native
               fi
           no_output_timeout: 30m
       - run:
