@@ -10,6 +10,7 @@ import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.containers.Network
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.lifecycle.Startables
+import org.testcontainers.utility.DockerImageName
 import java.util.concurrent.TimeUnit
 import java.util.stream.Stream
 
@@ -104,7 +105,9 @@ abstract class BaseComponentTst {
     }
 
 
-    class KPostgreSQLContainer(imageName: String) : PostgreSQLContainer<KPostgreSQLContainer>(imageName)
+    class KPostgreSQLContainer(dockerImageName: String?) : PostgreSQLContainer<KPostgreSQLContainer>(
+        DockerImageName.parse(dockerImageName).asCompatibleSubstituteFor("postgres")
+    )
 
     class KGenericContainer(imageName: String) : GenericContainer<KGenericContainer>(imageName)
 
