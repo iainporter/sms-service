@@ -34,7 +34,13 @@ class DefaultSmsServiceTest {
         var request = getSendSmsRequest()
         val message = smsService.createMessage(request)
         val foundMessage = smsService.getMessage(message.id)
-        assertEquals(message, foundMessage)
+        assertEquals(message.id, foundMessage.id)
+        assertEquals(message.status, foundMessage.status)
+        assertEquals(message.fromNumber, foundMessage.fromNumber)
+        assertEquals(message.toNumber, foundMessage.toNumber)
+        assertEquals(message.text, foundMessage.text)
+        assertEquals(message.createdAt.toEpochMilli(), foundMessage.createdAt.toEpochMilli())
+        assertEquals(message.updatedAt.toEpochMilli(), foundMessage.updatedAt.toEpochMilli())
     }
 
     @Test
