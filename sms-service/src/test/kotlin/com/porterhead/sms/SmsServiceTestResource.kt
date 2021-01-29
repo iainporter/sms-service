@@ -17,6 +17,7 @@ import io.restassured.RestAssured
 import io.restassured.response.ResponseBody
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.utility.DockerImageName
 import java.lang.reflect.Field
 import java.util.*
 
@@ -31,7 +32,10 @@ open class SmsServiceTestResource : QuarkusTestResourceLifecycleManager {
             .withPassword("postgres")
             .withDatabaseName("sms")
 
-    class KPostgreSQLContainer(imageName: String) : PostgreSQLContainer<KPostgreSQLContainer>(imageName)
+
+    class KPostgreSQLContainer(dockerImageName: String?) : PostgreSQLContainer<KPostgreSQLContainer>(
+            DockerImageName.parse(dockerImageName).asCompatibleSubstituteFor("postgres")
+    )
 
     override fun start(): MutableMap<String, String> {
         wireMockServer = WireMockServer(WireMockConfiguration().dynamicPort())

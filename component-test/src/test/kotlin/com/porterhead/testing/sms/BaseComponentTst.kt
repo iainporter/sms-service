@@ -4,11 +4,13 @@ import com.porterhead.testing.RestFunctions
 import io.debezium.testing.testcontainers.DebeziumContainer
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
+import mu.KotlinLogging
 import org.awaitility.Awaitility
 import org.junit.BeforeClass
 import org.testcontainers.containers.*
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.lifecycle.Startables
+import org.testcontainers.utility.DockerImageName
 import org.testcontainers.utility.MountableFile
 import java.time.Duration
 import java.time.temporal.TemporalUnit
@@ -17,7 +19,9 @@ import java.util.stream.Stream
 
 abstract class BaseComponentTst {
 
+
     companion object {
+        private val log = KotlinLogging.logger {}
 
         private val configPath: String = if(System.getProperty("profile") == "native")  "/work/config/application.properties" else "config/application.properties"
 
@@ -34,7 +38,7 @@ abstract class BaseComponentTst {
                 .withPassword("postgres")
                 .withDatabaseName("sms")
 
-        private var debeziumContainer: DebeziumContainer = DebeziumContainer("debezium/connect:1.2.1.Final")
+        private var debeziumContainer: DebeziumContainer = DebeziumContainer.latestStable()
                 .withNetwork(network)
                 .withExposedPorts(8083)
                 .withKafka(kafkaContainer)
@@ -74,6 +78,7 @@ abstract class BaseComponentTst {
         @BeforeClass
         @JvmStatic
         fun startContainers() {
+            log.info { "starting containers..." }
             kafkaContainer.start()
             val kafkaBootstrap: String = kafkaContainer.bootstrapServers
             System.setProperty("kafka.bootstrap.servers", kafkaBootstrap)
@@ -94,6 +99,7 @@ abstract class BaseComponentTst {
         }
 
         fun registerKafkaConnector(port: Int) {
+            log.info { "registering Kafka connector" }
             RestAssured.given()
                     .contentType(ContentType.JSON)
                     .body(connectorRequest)
@@ -135,7 +141,9 @@ abstract class BaseComponentTst {
 
     }
 
-    class KPostgreSQLContainer(imageName: String) : PostgreSQLContainer<KPostgreSQLContainer>(imageName)
+    class KPostgreSQLContainer(dockerImageName: String?) : PostgreSQLContainer<KPostgreSQLContainer>(
+            DockerImageName.parse(dockerImageName).asCompatibleSubstituteFor("postgres")
+    )
 
     class KGenericContainer(imageName: String) : GenericContainer<KGenericContainer>(imageName)
 
